@@ -1,0 +1,16 @@
+{
+  "name": "audiobook",
+  "description": "Audio book thesis project",
+  "author": "Nina Slabe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "~4.18.2",
+    "hbs": "~4.2.0",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.1"
+  }
+}
