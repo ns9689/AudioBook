@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  node-api:
+    container_name: ab-app
+    restart: always
+    ports:
+      - "3000:3000"
+    image: ab-server
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=docker
+    networks:
+      - ab-network
+  mongo-db:
+    image: mongo
+    container_name: ab-mongodb
+    ports:
+      - "27017-27019:27017-27019"
+    networks:
+      - ab-network
+
+networks:
+  ab-network:
+    name: ab-network
+    driver: bridge

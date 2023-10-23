@@ -5,7 +5,7 @@ html, body {
 body {
     padding-top:20px;
 
-    background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) ), url("img/booksimg.jpg") no-repeat center center fixed;
+    background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) ), url("public/images/booksimg.jpg") no-repeat center center fixed;
     background-size: cover;
 }
 .form-control {
@@ -75,70 +75,6 @@ body {
 * {box-sizing: border-box;}
 ul {list-style-type: none;}
 
-
-.month {
-    padding: 70px 25px;
-    width: 100%;
-    background: #1abc9c;
-    text-align: center;
-}
-
-.month ul {
-    margin: 0;
-    padding: 0;
-}
-
-.month ul li {
-    color: white;
-    font-size: 20px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-}
-
-.month .prev {
-    float: left;
-    padding-top: 10px;
-}
-
-.month .next {
-    float: right;
-    padding-top: 10px;
-}
-
-.weekdays {
-    margin: 0;
-    padding: 10px 0;
-    background-color: #ddd;
-}
-
-.weekdays li {
-    display: inline-block;
-    width: 13.6%;
-    color: #666;
-    text-align: center;
-}
-
-.days {
-    padding: 10px 0;
-    background: #eee;
-    margin: 0;
-}
-
-.days li {
-    list-style-type: none;
-    display: inline-block;
-    width: 13.6%;
-    text-align: center;
-    margin-bottom: 5px;
-    font-size:12px;
-    color: #777;
-}
-
-.days li .active {
-    padding: 5px;
-    background: #1abc9c;
-    color: white !important
-}
 
 .player{
     margin: 50px 0;
