@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const sentenceShema = new mongoose.Schema({
+const optionsShema = new mongoose.Schema({
    text: {
       type: String,
       required: [true, "Text is required"],
@@ -17,10 +17,6 @@ const sentenceShema = new mongoose.Schema({
 });
 
 const knjigaShema = new mongoose.Schema({
-   id: { //no need, gets _id
-      type: Number,
-      required: [true, "Unique identifier is required"],
-   },
    author: {
       type: String, //Uporabnik, //objekt
       required: [true, "Uporabnik is required"],
@@ -32,8 +28,8 @@ const knjigaShema = new mongoose.Schema({
    originalText: {
       type: String,
    },
-   options: {
-      type: [sentenceShema], //ne bo string, ampak audio, tudi text? - nova tabela?
+   sentences: {
+      type: [optionsShema], //ne bo string, ampak audio, tudi text? - nova tabela?
    },
    dateCreated: {
       type: Date,

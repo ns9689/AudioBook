@@ -1,3 +1,5 @@
+console.log("hello");
+
 const express = require("express");
 const path = require("path");
 
@@ -7,6 +9,7 @@ const path = require("path");
 require("./api/models/db.js");
 
 const hbsRouter = require("./api/routes/hbs");
+const apiRouter = require("./api/routes/api");
 /**
  * Create server
  */
@@ -17,6 +20,7 @@ const app = express();
  * Static pages
  */
 app.use(express.static(path.join(__dirname,"public")));
+//app.use(express.static('public'))
 
 /**
  * View engine (HBS) setup
@@ -28,6 +32,11 @@ app.set("view engine","hbs");
  * HBS routing
  */
 app.use("/",hbsRouter);
+
+/**
+ * API routing
+ */
+app.use("/",apiRouter);
 
 /**
  * Start server

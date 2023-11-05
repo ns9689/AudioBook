@@ -60,3 +60,7 @@ td.hide-table-padding td {
 .edit {
     padding: 0.5%;
 }
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)), url("./public/images/booksimg.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
