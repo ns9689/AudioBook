@@ -37,7 +37,7 @@ function myFunction() {
     var input, filter, table, tr, td, i, txtValue, tr1;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("tableDnD");
+    table = document.getElementById("table");
     tr = table.getElementsByClassName("search");
     tr1 = table.getElementsByClassName("accordion-toggle");
 
@@ -57,7 +57,7 @@ function myFunction() {
 }
 
 
-const tableBody = document.querySelector('#tableDnD tbody');
+const tableBody = document.querySelector('#table tbody');
 const rows = [
     { id: 1, row: 0, class: 'table-success search', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', },
     { id: 2, row: 1, class: 'table-secondary search', text:'lallalal' },

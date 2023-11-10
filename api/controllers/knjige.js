@@ -8,71 +8,58 @@ const izbrisiKnjigo =  (req,res) => {
 
 const posodobiKnjigo = (req,res) => {
     //res.render("index", {title:"NovaKnjiga!"});
-    res.status(200).json({status:"K"});
+    res.status(200).json({status:"Ok"});
 };
 
-const pridobiKnjigo =  async (req, res) => {
-    Knjiga.find({}, function (knjige) {
-        console.log(knjige);
-    });
-    await Knjiga.findById(req.params.knjigaId)
-        .exec((err, knjiga) => {
-            if (!err) {
-                res.status(200).json(knjiga);
-                console.log(req.params);
-                console.log(req.params.knjigaId);
-                console.log("empty");
-                console.log(knjiga);
-            } else {
-                res.status(404).json({
-                    message: "Knjiga with id '" + req.params.knjigaId + "' not found"
-                });
-            }
-        })
-    /*.then(knjiga => {
-        if (knjiga) {
-            console.log(req.params.knjigaId);
+const pridobiKnjigo =  (req, res) => {
+    Knjiga.findById(req.params.knjigaId,function (err, knjiga) {
+        if (!err) {
             res.status(200).json(knjiga);
+        } else if (err) {
+            res.status(500).json({ message: err.message });
         } else {
-            console.log(req.params);
-            console.log(req.params.knjigaId.toString());
-            console.log("empty");
-            console.log(knjiga);
-        }
-    }).catch((err) => {
-        if (err) res.status(500).json({message: "moj " + err.message});
-        else
             res.status(404).json({
-                message: "Knjiga with id " + req.params.knjigaId + "not found"
+                message: "Knjiga with id '" + req.params.knjigaId + "' not found"
             });
-    })*/
-    //res.render("index", {title:"Pridobi knjigo!"});
+        }
+    });
 };
 
-const vseKnjige =  (req,res) => {
-    //res.render("index", {title:"NovaKnjiga!"});
-    res.status(200).json({status:"OK"});
+const vseKnjige =  async (req, res) => {
+    Knjiga.find({},function (error, knjige) {
+        if(!error){
+            //res.status(200).json(knjige);
+            res.render("knjige", {
+                title: "novo",
+                p_js: "knjige.js",
+                knjige: knjige
+            })
+        }else{
+            res.status(404).send("Ni najdeno");
+        }
+    });
 };
 
-const novaKnjiga = (req, res) => {
-    //res.render("index", {title:"NovaKnjiga!"});
-    res.status(201).json({status:"OK"});
+const novaKnjiga = async (req, res, podatki) => {
+    let state = "table-primary";
+    if (podatki.state === 1) {
+        state = "table-secondary";
+    } else if (podatki.state === 2) {
+        state = "table-success";
+    }
+    const knjiga = await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: state},
+        function (error, knjiga) {
+            if(!error){
+                console.log(knjiga);
+                res.status(201).json(knjiga);
+            }else{
+                res.status(404).send("Not created");
+            }
+        });
 };
-
-/*const knjiga = (req, res) => {
-    res.render("index", {title:"Knjiga!"});
-    res.status(200).json({status:"OK"});
-};
-
-const projekti = (req, res) => {
-    res.render("index", {title:"Knjige!"});
-    res.status(200).json({status:"OK"});
-};*/
 
 module.exports = {
-    //knjiga,
     novaKnjiga,
-    //projekti,
     vseKnjige,
     posodobiKnjigo,
     izbrisiKnjigo,

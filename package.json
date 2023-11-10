@@ -12,6 +12,6 @@
     "hbs": "~4.2.0",
     "kill-port": "^2.0.1",
     "mongodb": "^5.7.0",
-    "mongoose": "^6.6.5"
+    "mongoose": "^6.12.3"
   }
 }

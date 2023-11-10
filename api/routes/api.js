@@ -11,7 +11,7 @@ const ctrlVerzija = require("../controllers/verzije");
 /**
  * Knjige
  */
-router.post("/knjige/", ctrlKnjiga.novaKnjiga);
+//router.post("/knjige/", ctrlKnjiga.novaKnjiga);
 router.get("/knjige/", ctrlKnjiga.vseKnjige);
 router.get("/knjige/:knjigaId", ctrlKnjiga.pridobiKnjigo);
 router.put("/knjige/:knjigaId", ctrlKnjiga.posodobiKnjigo);

@@ -32,15 +32,14 @@ const knjigaShema = new mongoose.Schema({
       type: [optionsShema], //ne bo string, ampak audio, tudi text? - nova tabela?
    },
    dateCreated: {
-      type: Date,
-      required: [true, "Date is required!"],
+      type: String,
    },
    dateFinished: {
       type: Date,
    },
    state: {
-      type: Number,
-      default: 0, //0 = did not start (background color), 1 = working on it (grey), 2 = finished (green)
+      type: String,
+      default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = finished (green)
       required: [true, "State is required"],
    },
 
