@@ -3,3 +3,28 @@ body {
     background-size: cover;
     min-height: 100%;
 }
+
+thead {
+    color: #f1f1f1;
+}
+
+.pagination {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    display: inline-block;
+    color: #f1f1f1;
+    margin: 0 5px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+
+.pagination-arrow {
+    margin: 0 5px;
+    cursor: pointer;
+}

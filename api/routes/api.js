@@ -11,8 +11,10 @@ const ctrlVerzija = require("../controllers/verzije");
 /**
  * Knjige
  */
-//router.post("/knjige/", ctrlKnjiga.novaKnjiga);
+router.get("/knjige/novaKnjiga", ctrlKnjiga.novaKnjiga);
+router.post("/knjige/novaKnjiga", ctrlKnjiga.ustvariKnjigo);
 router.get("/knjige/", ctrlKnjiga.vseKnjige);
+//router.get("/knjige/izbrisiKnjige", ctrlKnjiga.izbrisiVseKnjige);
 router.get("/knjige/:knjigaId", ctrlKnjiga.pridobiKnjigo);
 router.put("/knjige/:knjigaId", ctrlKnjiga.posodobiKnjigo);
 router.delete("/knjige/:knjigaId", ctrlKnjiga.izbrisiKnjigo);
@@ -35,7 +37,8 @@ router.put("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.poso
 //ce je izbrana nova verzija za glavno verzijo, se sprozi posodobitev stavka
 router.delete("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.izbrisiVerzijo);
 
-//router.get('/', ctrlUporabnik.prijava);
+
+// router.get('/', ctrlUporabnik.prijava);
 //router.get('/', ctrlUporabnik.registracija);
 
 module.exports = router;

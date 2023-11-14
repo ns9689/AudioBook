@@ -1,0 +1,26 @@
+<div class="container">
+    <form action="/knjige/novaKnjiga" method="post" id="newBook">
+        <div class="col-sm-12">
+            <label for="floatingInput">Avtor</label>
+            <input type="text" class="form-control" id="floatingInput" name="author"
+                   placeholder="Ime avtorja" required>
+        </div>
+
+        <div class="col-sm-12">
+            <label for="floatingInput">Naslov</label>
+            <input type="text" class="form-control" id="floatingInput" name="title"
+                   placeholder="Naslov knjige" required>
+        </div>
+
+        <div class="col-sm-12">
+            <label for="floatingInput">Besedilo knjige</label>
+            <input type="text" class="form-control" id="floatingInput" name="text"
+                   placeholder="Vnesi besedilo" required>
+        </div>
+
+        <div class="col-sm-12">
+            <input type="submit" value="Shrani"
+                   class="popover-dismiss col-lg-4 mx-auto col-sm-3 mt-3 btn btn-primary">
+        </div>
+    </form>
+</div>
