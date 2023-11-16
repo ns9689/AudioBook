@@ -1,6 +1,4 @@
-
 <div class="container">
-
     <div class="row">
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the book...">
         <div class="col-sm-2"></div>
@@ -9,7 +7,10 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Avtor</th>
                     <th scope="col">Knjiga</th>
+                    <th scope="col">Datum začetka projekta</th>
+                    <th scope="col">Datum zaključka projekta</th>
                 </tr>
                 </thead>
 
@@ -17,9 +18,13 @@
                     {{#each knjige}}
                         <tr class="search {{this.state}}">
                             <th scope="row">{{@index}}</th>
+                            <td>{{this.author}}</td>
                             <td>{{this.title}}</td>
                             <td>{{this.dateCreated}}</td>
                             <td>{{this.dateFinished}}</td>
+                            <td><button type="button" class="btn projekti delete-btn" data-id="{{this._id}}">
+                                <i class="bi bi-trash"></i></button>
+                                <a href="/knjige/{{this._id}}"><button type="button" class="btn projekti" id="btn-normalize"><i class="bi bi-pen"></i></button></a></td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -32,171 +37,13 @@
             </div>
 
             <p></p>
-            <button type="button" class="btn btn-primary" id="btn-normalize" onclick="normalizeText($('#textAreaField')[0].value)">Shrani projekt</button>
-            <button type="button" class="btn btn-success" id="btn-prepare" onclick="prepareText($('#textAreaField')[0].value)">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
-
-            <div class="float-end">
-                <button class="btn btn-secondary" id="btn-settings" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel" style="visibility: hidden;" aria-hidden="true">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasLeftLabel">Nastavitve</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body small">
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                                </select>
-                                <label for="floatingSelectGrid">Govorec</label>
-                            </div>
-                        </div>
-                        <br>
-
-                        <label for="paceValue" class="form-label" id="labelPace">Tempo: 1</label>
-                        <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="paceValue" oninput="$('#labelPace')[0].innerHTML='Tempo: '.concat(this.value)">
-
-                        <label for="pitchValueShift" class="form-label" id="labelPitchShift">Višina-zamik: 0</label>
-                        <input type="range" class="form-range" min="-50" max="50" value="0" id="pitchValueShift" oninput="$('#labelPitchShift')[0].innerHTML='Višina-zamik: '.concat(this.value)">
-
-                        <label for="pitchValueAmp" class="form-label" id="labelPitchAmp">Višina-faktor ojačitve: 1</label>
-                        <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="pitchValueAmp" oninput="$('#labelPitchAmp')[0].innerHTML='Višina-faktor ojačitve: '.concat(this.value)">
-
-                        <br>
-                        <br>
-                        <h6>Predobdelava besedila</h6>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="cb-normalize" checked="">
-                            <label class="form-check-label" for="cb-normalize">Normaliziraj</label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="cb-accentuate" checked="">
-                            <label class="form-check-label" for="cb-accentuate">Naglasi</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="simple-accentuation" checked="">
-                            <label class="form-check-label" for="simple-accentuation">
-                                Uporabi enostavno naglaševanje
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="caching" checked="">
-                            <label class="form-check-label" for="caching">
-                                Uporabi že sintetizirano besedilo
-                            </label>
-                        </div>
-                        <hr>
-
-                        <br>
-                        <br>
-
-                        <h6>Stanje sistema <a href="javascript:checkServices()"><i class="bi bi-arrow-clockwise"></i></a></h6>
-                        <br>
-                        <p id="label_deviceCount">Število GPU enot: -</p>
-                        <p id="label_totalMEM">Skupna velikost spomina: -</p>
-                        <p id="label_consumedMEM">Zasedeno: -</p>
-                        <p id="label_freeMEM">Prosto: -</p>
-                        <br>
-
-                        <p>Dostopnost naglaševalnika: <i class="bi bi-question-circle-fill" style="color:black" id="id_accentuator_icon"></i> </p>
-                        <p>Dostopnost normalizatorja: <i class="bi bi-question-circle-fill" style="color:black" id="id_normalizator_icon"></i> </p>
-
-                        <!---Check system state-->
-                        <script>
-                            checkServices()
-                        </script>
-                    </div>
-                </div>
-            </div>
+            <a href="/knjige/novaKnjiga"><button type="button" class="btn btn-primary" id="btn-normalize">Nov projekt</button></a>
+            <a href="/knjige/izbrisiKnjige"><button type="button" class="btn btn-danger" id="btn-normalize">Izbriši vse projekte</button></a>
+            <div class="col-sm-2"></div>
         </div>
-        <div class="col-sm-2"></div>
     </div>
 </div>
 
 <script>
-    //tabela pagination
-    const itemsPerPage = 3; // Set the number of items per page
-    const itemTable = document.getElementById('table');
-    const paginationContainer = document.getElementById('pagination');
-    let currentPage = 1;
 
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(itemTable.tBodies[0].rows.length / itemsPerPage);
-
-    // Function to display the items for the given page
-    function showPage(page) {
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-
-        const rows = itemTable.tBodies[0].rows;
-
-        for (let i = 0; i < rows.length; i++) {
-            rows[i].style.display = (i >= startIndex && i < endIndex) ? 'table-row' : 'none';
-        }
-
-        currentPage = page;
-        updatePaginationButtons();
-    }
-
-    // Function to generate the pagination links
-    function generatePagination() {
-        for (let i = 1; i <= totalPages; i++) {
-            const li = document.createElement('li');
-            li.textContent = i;
-            li.addEventListener('click', () => showPage(i));
-            paginationContainer.appendChild(li);
-        }
-
-        updatePaginationButtons();
-    }
-
-    // Function to update pagination arrows based on current page
-    function updatePaginationButtons() {
-        const prevButton = document.querySelector('.pagination-arrow:first-child');
-        const nextButton = document.querySelector('.pagination-arrow:last-child');
-
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = currentPage === totalPages;
-    }
-
-    // Function to go to the previous page
-    function prevPage() {
-        if (currentPage > 1) {
-            showPage(currentPage - 1);
-        }
-    }
-
-    // Function to go to the next page
-    function nextPage() {
-        if (currentPage < totalPages) {
-            showPage(currentPage + 1);
-        }
-    }
-
-    // Show the first page initially
-    showPage(1);
-
-    // Generate pagination links
-    generatePagination();
-
-    //iskalnik
-    function myFunction() {
-        var input, filter, table, tr, td, i, txtValue, tr1;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("table");
-        tr = table.getElementsByClassName("search");
-
-        // Loop through all table rows, and hide those who don't match the search query
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
 </script>

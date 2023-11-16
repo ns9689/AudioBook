@@ -4,6 +4,23 @@ body {
     min-height: 100%;
 }
 
+.form-nova {
+    color: #f1f1f1;
+}
+
+
+
+.btn {
+    margin-bottom: 10px;
+}
+
+.projekti {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
 thead {
     color: #f1f1f1;
 }
@@ -19,9 +36,12 @@ thead {
     color: #f1f1f1;
     margin: 0 5px;
     cursor: pointer;
-    text-decoration: underline;
 }
 
+.pagination li:hover,
+.pagination li.selected {
+    text-decoration: underline;
+}
 
 
 .pagination-arrow {

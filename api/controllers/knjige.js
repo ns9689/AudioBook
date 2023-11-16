@@ -3,19 +3,22 @@ const Knjiga = mongoose.model("Knjiga");
 
 const izbrisiKnjigo =  async (req, res) => {
     const izbris = await Knjiga.deleteOne({_id: req.params.knjigaId});
-    console.log(izbris);
     if (izbris.deletedCount === 0) {
         res.status(404).json({
             message: "Knjiga with id '" + req.params.knjigaId + "' does not exist"
         });
     } else {
-        res.redirect("/" + "knjige");
-    };
+        res.sendStatus(204);
+    }
 };
 
 const izbrisiVseKnjige =  async (req, res) => {
-    await Knjiga.deleteMany({});
-    res.status(204).json({status: "OK"});
+    try {
+        await Knjiga.deleteMany({});
+        res.redirect("/knjige");
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 const posodobiKnjigo = (req,res) => {
@@ -25,7 +28,7 @@ const posodobiKnjigo = (req,res) => {
 
 const pridobiKnjigo =  (req, res) => {
     Knjiga.findById(req.params.knjigaId,function (err, knjiga) {
-        if (!err) {
+        if (knjiga) {
             res.render( "knjiga", {
                 title: knjiga.title,
                 knjiga: knjiga,
@@ -44,8 +47,8 @@ const vseKnjige =  async (req, res) => {
     Knjiga.find({},function (error, knjige) {
         if(!error){
             res.render("knjige", {
-                title: "Naslov",
-                p_js: "knjige.js",
+                title: "Projekti",
+                p_js: "javascripts/knjige.js",
                 knjige: knjige
             })
         }else{
@@ -57,7 +60,7 @@ const vseKnjige =  async (req, res) => {
 const novaKnjiga = (req, res) => {
     res.render("nova", {
         title: "Nova knjiga",
-        p_js: "knjige.js",
+        p_js: "../javascripts/nova.js",
     })
 };
 

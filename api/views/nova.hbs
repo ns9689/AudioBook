@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container form-nova">
     <form action="/knjige/novaKnjiga" method="post" id="newBook">
         <div class="col-sm-12">
             <label for="floatingInput">Avtor</label>
@@ -17,6 +17,12 @@
             <input type="text" class="form-control" id="floatingInput" name="text"
                    placeholder="Vnesi besedilo" required>
         </div>
+
+        <div class="col-sm-12">
+            <label for="fileInput">Naloži datoteko</label>
+            <input type="file" class="form-control" id="fileInput" name="file" accept=".pdf, .doc, .docx" required>
+        </div>
+
 
         <div class="col-sm-12">
             <input type="submit" value="Shrani"

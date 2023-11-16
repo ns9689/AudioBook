@@ -1,3 +1,32 @@
+//
+//make delete request
+document.addEventListener('DOMContentLoaded', function () {
+    var deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var knjigaId = this.getAttribute('data-id');
+            if (confirm('Ali zares želite izbrisati to knjigo?')) {
+                fetch(`/knjige/` + knjigaId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(res => {
+                    if (!res.ok) {
+                        console.log(`/knjige/` + knjigaId);
+                        console.log(res);
+                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                    }
+                    window.location.href ="/knjige";
+                }).catch(error => {
+                        // Handle errors during the DELETE request
+                        console.error('Error deleting book:', error.message);
+                    });
+            }
+        });
+    });
+});
+//
 //tabela pagination
 const itemsPerPage = 3; // Set the number of items per page
 const itemTable = document.getElementById('table');
@@ -11,7 +40,6 @@ const totalPages = Math.ceil(itemTable.tBodies[0].rows.length / itemsPerPage);
 function showPage(page) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-
     const rows = itemTable.tBodies[0].rows;
 
     for (let i = 0; i < rows.length; i++) {
@@ -30,7 +58,6 @@ function generatePagination() {
         li.addEventListener('click', () => showPage(i));
         paginationContainer.appendChild(li);
     }
-
     updatePaginationButtons();
 }
 
@@ -41,6 +68,17 @@ function updatePaginationButtons() {
 
     prevButton.disabled = currentPage === 1;
     nextButton.disabled = currentPage === totalPages;
+
+    document.querySelectorAll('.pagination li').forEach(li => li.classList.remove('selected'));
+
+    const listItemElements = document.querySelectorAll('.pagination li');
+
+    for (let i = 0; i < listItemElements.length; i++) {
+        if (currentPage.toString() === listItemElements[i].innerHTML.toString()) {
+            listItemElements[i].classList.add('selected');
+            break;
+        }
+    }
 }
 
 // Function to go to the previous page
@@ -63,6 +101,7 @@ showPage(1);
 // Generate pagination links
 generatePagination();
 
+//
 //iskalnik
 function myFunction() {
     var input, filter, table, tr, td, i, txtValue, tr1;
@@ -74,8 +113,6 @@ function myFunction() {
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td")[0];
-        console.log(td);
-        //window.alert(td);
         if (td) {
             txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {

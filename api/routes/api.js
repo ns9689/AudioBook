@@ -14,9 +14,9 @@ const ctrlVerzija = require("../controllers/verzije");
 router.get("/knjige/novaKnjiga", ctrlKnjiga.novaKnjiga);
 router.post("/knjige/novaKnjiga", ctrlKnjiga.ustvariKnjigo);
 router.get("/knjige/", ctrlKnjiga.vseKnjige);
-//router.get("/knjige/izbrisiKnjige", ctrlKnjiga.izbrisiVseKnjige);
+router.get("/knjige/izbrisiKnjige", ctrlKnjiga.izbrisiVseKnjige);
 router.get("/knjige/:knjigaId", ctrlKnjiga.pridobiKnjigo);
-router.put("/knjige/:knjigaId", ctrlKnjiga.posodobiKnjigo);
+router.put("/knjige/:knjigaId/uredi", ctrlKnjiga.posodobiKnjigo);
 router.delete("/knjige/:knjigaId", ctrlKnjiga.izbrisiKnjigo);
 
 /**
