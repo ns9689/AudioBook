@@ -2,24 +2,42 @@
 //make delete request
 document.addEventListener('DOMContentLoaded', function () {
     var deleteButtons = document.querySelectorAll('.delete-btn');
+    var deleteAllButtons = document.querySelectorAll('.deleteAll-btn');
     deleteButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             var knjigaId = this.getAttribute('data-id');
             if (confirm('Ali zares želite izbrisati to knjigo?')) {
-                fetch(`/knjige/` + knjigaId, {
+                fetch("/knjige/" + knjigaId, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 }).then(res => {
                     if (!res.ok) {
-                        console.log(`/knjige/` + knjigaId);
-                        console.log(res);
                         throw new Error(`Server error: ${res.status} - ${response.statusText}`);
                     }
                     window.location.href ="/knjige";
                 }).catch(error => {
                         // Handle errors during the DELETE request
+                        console.error('Error deleting book:', error.message);
+                    });
+            }
+        });
+    });
+    deleteAllButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            if (confirm('Ali zares želite izbrisati vse projekte?')) {
+                fetch("/knjige/izbrisiKnjige", {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(res => {
+                    if (!res.ok) {
+                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                    }
+                    window.location.href ="/knjige";
+                }).catch(error => {
                         console.error('Error deleting book:', error.message);
                     });
             }

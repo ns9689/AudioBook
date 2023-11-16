@@ -2,7 +2,7 @@
 <div class="container">
 
     <div class="row">
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the book...">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the sentence...">
         <div class="col-sm-2"></div>
         <div class="col-sm-12">
             <table id="table" class="table table-hover" data-total-field="count">
@@ -15,22 +15,98 @@
                 </thead>
 
                 <tbody>
-                <tr class="search {{knjiga.state}}">
-                    <!--<th scope="row">{{@index}}</th>-->
-                    <td>{{knjiga.title}}</td>
-                    <td>{{knjiga.dateCreated}}</td>
-                    <td>{{knjiga.dateFinished}}</td>
-                </tr>
-                <!--{{#each knjiga}}
-                    <tr class="search {{this.state}}">
-                        <th scope="row">{{@index}}</th>
-                        <td>{{this.title}}</td>
-                        <td>{{this.dateCreated}}</td>
-                        <td>{{this.dateFinished}}</td>
-                    </tr>
-                {{/each}}-->
+                    {{#each knjiga.sentences}}
+                        <!--<tr data-toggle="collapse" data-target="#row{{@index}}" aria-expanded="false">
+                            <th scope="row">{{@index}}</th>
+                            <td>{{this.text}}</td>
+                            <td><button class="btn btn-primary">Expand</button></td>
+                        </tr>
+                        <tr id="row{{@index}}" class="collapse hiddenRow">
+                            <td colspan="3">
+                                 Content of the expanded row goes here
+                                Additional details for row {{@index}}.
+                            </td>
+                        </tr>
+                       <tr class="search {{this.state}}">
+                            <th scope="row">{{@index}}</th>
+                            <td>{{this.text}}</td>
+                        </tr>
+                        <tr data-toggle="collapse" class="accordion-toggle search {{this.state}}" data-target="#{{this._id}}" aria-expanded="false">-->
+                        <tr data-toggle="collapse" data-target="#row1" aria-expanded="false" class="search {{this.state}}">
+                            <th scope="row">{{@index}}</th>
+                            <td>{{this.text}}</td>
+                            <td width="15%"><button class="btn"><i class="bi bi-play-circle"></i></button></td>
+                            <td width="15%"><button class="btn"><i class="bi bi-pencil-square"></i></button></td>
+                            <td width="15%"><button class="btn edit"><i class="bi bi-trash"></i></button></td>
+                        </tr>
 
-                <!-- Rows will be dynamically added here -->
+                        <tr id="row1" class="collapse hiddenRow">
+                            <td colspan="12" class="hiddenRow {{this.state}}">
+                                <div class="accordion-body collapse in" id="{{this._id}}" aria-expanded="true" style="">
+                                    <table class="table">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <audio controls>
+                                                    <source src="horse.ogg" type="audio/ogg">
+                                                    <source src="horse.mp3" type="audio/mpeg">
+                                                    Your browser does not support the audio element.
+                                                </audio>
+                                            </td>
+                                            <td>
+                                                <button class="btn edit"><i class="bi bi-pen"></i></button>
+                                                <button class="btn edit"><i class="bi bi-file-play"></i></button>
+                                                <button class="btn edit"><i class="bi-bookmark-star"></i></button>
+                                                <button class="btn edit"><i class="bi-bookmark-x"></i></button>
+                                                <button class="btn edit"><i class="bi bi-trash"></i></button>
+                                            </td>
+                                            <td>
+                                                <!--<i class="fa-light fa-circle-0">0</i>-->
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn1 btn-circle btn-sm" value="{{this._id}}">1.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn2 btn-circle btn-sm" value="${rowData.id}">2.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn3 btn-circle btn-sm" value="${rowData.id}">3.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn4 btn-circle btn-sm" value="${rowData.id}">4.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn5 btn-circle btn-sm" value="${rowData.id}">5.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn6 btn-circle btn-sm" value="${rowData.id}">6.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn7 btn-circle btn-sm" value="${rowData.id}">7.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn8 btn-circle btn-sm" value="${rowData.id}">8.</button></a>
+                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn9 btn-circle btn-sm" value="${rowData.id}">9.</button></a>
+                                            </td>
+                                        </tr>
+                                        <!-- modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1">
+                                            <div class="modal-dialog" style="max-width: 80%;">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel"><b>${rowData.audios[2]}</b></h5>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="text" class="form-control" value="${rowData.text}">
+                                                        </br>
+                                                        <audio controls>
+                                                            <source src="horse.ogg" type="audio/ogg">
+                                                            <source src="horse.mp3" type="audio/mpeg">
+                                                            Your browser does not support the audio element.
+                                                        </audio>
+                                                    </div>
+                                                    <div class="modal-footer player">
+                                                        <button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>
+                                                        <button class="btn edit"><i class="bi bi-file-play"></i></button>
+                                                        <button class="btn edit"><i class="bi-bookmark-star"></i></button>
+                                                        <button class="btn edit"><i class="bi-bookmark-x"></i></button>
+                                                        <button class="btn edit"><i class="bi bi-trash"></i></button>
+                                                        <button class="btn edit" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
                 </tbody>
             </table>
 
@@ -40,8 +116,10 @@
 
             <p></p>
             <button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>
-            <button type="button" class="btn btn-primary" id="btn-normalize" onclick="normalizeText($('#textAreaField')[0].value)">Shrani projekt</button>
-            <button type="button" class="btn btn-success" id="btn-prepare" onclick="prepareText($('#textAreaField')[0].value)">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
+            <button type="button" class="btn btn-primary" id="btn-normalize">Shrani projekt</button>
+            <button type="button" class="btn btn-success" id="btn-prepare">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
+
+
 
             <div class="float-end">
                 <button class="btn btn-secondary" id="btn-settings" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
@@ -126,25 +204,5 @@
     </div>
 </div>
 
-<script>function myFunction() {
-    var input, filter, table, tr, td, i, txtValue, tr1;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("table");
-    tr = table.getElementsByClassName("search");
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        console.log(td);
-        //window.alert(td);
-        if (td) {
-            txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
-}</script>
+<script>
+</script>

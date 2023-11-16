@@ -15,7 +15,7 @@ const izbrisiKnjigo =  async (req, res) => {
 const izbrisiVseKnjige =  async (req, res) => {
     try {
         await Knjiga.deleteMany({});
-        res.redirect("/knjige");
+        res.sendStatus(204);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -32,6 +32,7 @@ const pridobiKnjigo =  (req, res) => {
             res.render( "knjiga", {
                 title: knjiga.title,
                 knjiga: knjiga,
+                p_js: "../javascripts/knjiga.js",
             })
         } else if (err) {
             res.status(500).json({ message: err.message });
@@ -65,9 +66,9 @@ const novaKnjiga = (req, res) => {
 };
 
 const ustvariKnjigo = async (req, res) => {
-    //console.log(req.body);
     let podatki = req.body;
-    await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary"},
+    await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary",
+        sentences: [{text: "text1", audio: null, state: "table-secondary"}, {text: "text2", audio: null, state: "table-secondary"}]},
         function (error, knjiga) {
             if(!error){
                 Knjiga.find({},function (error, knjige) {
@@ -78,6 +79,7 @@ const ustvariKnjigo = async (req, res) => {
                     }
                 });
             }else{
+                console.log(error);
                 res.status(404).send("Not created");
             }
         });

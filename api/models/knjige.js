@@ -7,11 +7,11 @@ const optionsShema = new mongoose.Schema({
    },
    audio: {
       type: Buffer,
-      required: [true, "Audio file is required"],
+      required: [false, "Audio file is required"],
    },
    state: {
-      type: Number,
-      default: 0, //0 = did not start (background color), 1 = working on it (grey), 2 = selected (green)
+      type: String,
+      default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = selected (green)
       required: [true, "State is required"],
    },
 });
