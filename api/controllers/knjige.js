@@ -73,6 +73,9 @@ const ustvariKnjigo = async (req, res) => {
             if(!error){
                 Knjiga.find({},function (error, knjige) {
                     if(!error){
+                        console.log(knjiga.sentences[0]);
+                        console.log(knjiga.sentences[1]);
+                        console.log(knjiga.sentences[2]);
                         res.redirect("" + knjiga._id);
                     }else{
                         res.status(404).send("Ni najdeno");

@@ -1,6 +1,22 @@
 const mongoose = require("mongoose");
 
-const optionsShema = new mongoose.Schema({
+const versionsShema = new mongoose.Schema({
+   text: {
+      type: String,
+      required: [true, "Text is required"],
+   },
+   audio: {
+      type: Buffer,
+      required: [false, "Audio file is required"],
+   },
+   state: {
+      type: String,
+      default: "search",
+      required: [true, "State is required"],
+   },
+});
+
+const sentencesShema = new mongoose.Schema({
    text: {
       type: String,
       required: [true, "Text is required"],
@@ -14,7 +30,11 @@ const optionsShema = new mongoose.Schema({
       default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = selected (green)
       required: [true, "State is required"],
    },
+   versions: {
+      type: [versionsShema],
+   }
 });
+
 
 const knjigaShema = new mongoose.Schema({
    author: {
@@ -29,7 +49,7 @@ const knjigaShema = new mongoose.Schema({
       type: String,
    },
    sentences: {
-      type: [optionsShema], //ne bo string, ampak audio, tudi text? - nova tabela?
+      type: [sentencesShema], //ne bo string, ampak audio, tudi text? - nova tabela?
    },
    dateCreated: {
       type: String,

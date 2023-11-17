@@ -16,33 +16,17 @@
 
                 <tbody>
                     {{#each knjiga.sentences}}
-                        <!--<tr data-toggle="collapse" data-target="#row{{@index}}" aria-expanded="false">
+                        <tr class="search {{this.state}}">
                             <th scope="row">{{@index}}</th>
                             <td>{{this.text}}</td>
-                            <td><button class="btn btn-primary">Expand</button></td>
-                        </tr>
-                        <tr id="row{{@index}}" class="collapse hiddenRow">
-                            <td colspan="3">
-                                 Content of the expanded row goes here
-                                Additional details for row {{@index}}.
-                            </td>
-                        </tr>
-                       <tr class="search {{this.state}}">
-                            <th scope="row">{{@index}}</th>
-                            <td>{{this.text}}</td>
-                        </tr>
-                        <tr data-toggle="collapse" class="accordion-toggle search {{this.state}}" data-target="#{{this._id}}" aria-expanded="false">-->
-                        <tr data-toggle="collapse" data-target="#row1" aria-expanded="false" class="search {{this.state}}">
-                            <th scope="row">{{@index}}</th>
-                            <td>{{this.text}}</td>
-                            <td width="15%"><button class="btn"><i class="bi bi-play-circle"></i></button></td>
+                            <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button class="btn edit"><i class="bi bi-trash"></i></button></td>
                         </tr>
 
-                        <tr id="row1" class="collapse hiddenRow">
-                            <td colspan="12" class="hiddenRow {{this.state}}">
-                                <div class="accordion-body collapse in" id="{{this._id}}" aria-expanded="true" style="">
+                        <tr id="a{{this._id}}" class="collapse" aria-labelledby="headingOne" data-parent="#table">
+                            <td colspan="12" class="{{this.state}}">
+                                <div >
                                     <table class="table">
                                         <tbody>
                                         <tr>
@@ -62,26 +46,26 @@
                                             </td>
                                             <td>
                                                 <!--<i class="fa-light fa-circle-0">0</i>-->
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn1 btn-circle btn-sm" value="{{this._id}}">1.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn2 btn-circle btn-sm" value="${rowData.id}">2.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn3 btn-circle btn-sm" value="${rowData.id}">3.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn4 btn-circle btn-sm" value="${rowData.id}">4.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn5 btn-circle btn-sm" value="${rowData.id}">5.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn6 btn-circle btn-sm" value="${rowData.id}">6.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn7 btn-circle btn-sm" value="${rowData.id}">7.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn8 btn-circle btn-sm" value="${rowData.id}">8.</button></a>
-                                                <a data-bs-toggle="modal" data-bs-target="#myModal"><button class="btn btn9 btn-circle btn-sm" value="${rowData.id}">9.</button></a>
+                                                <button class="btn btn1 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">1.</button>
+                                                <button class="btn btn2 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">2.</button>
+                                                <button class="btn btn3 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">3.</button>
+                                                <button class="btn btn4 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">4.</button>
+                                                <button class="btn btn5 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">5.</button>
+                                                <button class="btn btn6 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">6.</button>
+                                                <button class="btn btn7 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">7.</button>
+                                                <button class="btn btn8 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">8.</button>
+                                                <button class="btn btn9 btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">9.</button>
                                             </td>
                                         </tr>
                                         <!-- modal -->
-                                        <div class="modal fade" id="myModal" tabindex="-1">
+                                        <div class="modal fade" id="b{{this._id}}" tabindex="-1">
                                             <div class="modal-dialog" style="max-width: 80%;">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel"><b>${rowData.audios[2]}</b></h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel"><b>{{this.text}}</b></h5>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <input type="text" class="form-control" value="${rowData.text}">
+                                                        <input type="text" class="form-control" value="{{this.text}}">
                                                         </br>
                                                         <audio controls>
                                                             <source src="horse.ogg" type="audio/ogg">
