@@ -49,7 +49,7 @@ const vseKnjige =  async (req, res) => {
         if(!error){
             res.render("knjige", {
                 title: "Projekti",
-                p_js: "javascripts/knjige.js",
+                p_js: "../javascripts/knjige.js",
                 knjige: knjige
             })
         }else{
@@ -68,14 +68,44 @@ const novaKnjiga = (req, res) => {
 const ustvariKnjigo = async (req, res) => {
     let podatki = req.body;
     await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary",
-        sentences: [{text: "text1", audio: null, state: "table-secondary"}, {text: "text2", audio: null, state: "table-secondary"}]},
+        sentences: [{
+            originalText: "text1",
+            chosenText: "text1",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {originalText: "text2", chosenText: "text2", chosenAudio: null, state: "table-secondary", versions: [{text: "text21", state: "table-secondary"}, {text: "text22", state: "table-secondary"}, {text: "text23", state: "table-secondary"}]}]},
         function (error, knjiga) {
             if(!error){
                 Knjiga.find({},function (error, knjige) {
                     if(!error){
-                        console.log(knjiga.sentences[0]);
-                        console.log(knjiga.sentences[1]);
-                        console.log(knjiga.sentences[2]);
+                        const url = "https://tts.true-bar.si/v1/speak";
+                        const headers = {
+                            "Content-Type": "application/json",
+                        };
+
+                        const data = {
+                            "userid": "nina",
+                            "voice": "ajda",
+                            "input_text": "string",
+                            "normalize": false,
+                            "accentuate": true,
+                            "simple_accentuation": true,
+                            "use_cache": true,
+                            "pace": 1,
+                            "tokenize": true,
+                            "pause_for_spelling": 0.25
+                        };
+
+                        fetch(url, {
+                            method: "POST",
+                            headers: headers,
+                            body: JSON.stringify(data),
+                        })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                            .catch(error => console.error('Error:', error));
+
                         res.redirect("" + knjiga._id);
                     }else{
                         res.status(404).send("Ni najdeno");

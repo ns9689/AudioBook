@@ -1,0 +1,296 @@
+
+
+<!--speech to text icon: https://iconduck.com/icons/104506/text-to-speech-->
+<div class="title-frame">
+    <svg width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g fill="#669df6"><path d="m2.01 6.99h6.64v1.67h-6.64z"></path><path d="m11.17 15.32h-9.17v1.67h9.17z"></path><path d="m4.51 11.16h-2.51v1.66h4.18 5.82l-1.67-1.66z"></path></g><path d="m12 9.07a.42.42 0 0 1 .42-.36.41.41 0 0 1 .41.36v9.18a2.09 2.09 0 0 0 2.61 2 2.16 2.16 0 0 0 1.56-2.11v-12.39a.4.4 0 0 1 .19-.4.41.41 0 0 1 .45 0 .4.4 0 0 1 .19.4v9.16a2.07 2.07 0 0 0 .81 1.64 2 2 0 0 0 1.8.37 2.16 2.16 0 0 0 1.56-2.12v-2.8h-1.67v2.92a.4.4 0 0 1 -.19.4.41.41 0 0 1 -.45 0 .4.4 0 0 1 -.19-.4v-9.17a2.09 2.09 0 0 0 -2.61-2 2.16 2.16 0 0 0 -1.56 2.13v12.37a.4.4 0 0 1 -.19.4.41.41 0 0 1 -.45 0 .4.4 0 0 1 -.19-.4v-9.17a2.07 2.07 0 0 0 -4.11-.36 2.4 2.4 0 0 0 -.05.46v2l1.66 1.64z" fill="#0D6EFD"></path></svg>
+    <span id="title-light">TRUE</span><span id="title-bold">BAR</span>
+    <span id="subtitle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="ver. 1.0.0, Sep. 2023">sintetizator</span>
+</div>
+
+<!--<div class="col-fixed" style="box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);">-->
+<div class="col-fixed" id="main-box">
+
+    <div class="row">
+        <br>
+        <br>
+        <div id="login-link" class="col-6 sign-in-up active">
+            <a id="signin-section" href="#" style="cursor: pointer; text-decoration: inherit; color: inherit;" onclick="ebookSign(action='signin')">Prijava</a>
+        </div>
+        <div id="register-link" class="col-6 sign-in-up">
+            <a id="signup-section" href="#" style="cursor: pointer; text-decoration: inherit; color: inherit;" onclick="ebookSign(action='signup')">Registracija</a>
+        </div>
+        <div class="col-12">
+            <div class="line-signin"></div>
+            <div class="line-signup d-none"></div>
+        </div>
+    </div>
+
+    <!--sign in-->
+    <div id="signin-content">
+        <form>
+            <div class="form-group" id="username" style="margin-top: 10%; text-align: center;">
+                <label class="login-label" for="username-input-box;">Uporabniško ime</label><br>
+                <input class="login-input" type="username" id="username-input-box" placeholder="vnesi uporabniško ime">
+            </div>
+            <br>
+            <div class="form-group" id="password" style="margin-top: 2%; text-align: center;">
+                <label class="login-label" for="password-input-box">Geslo</label><br>
+                <input required="" class="login-input" type="password" id="password-input-box" placeholder="vnesi geslo">
+            </div>
+            <div class="login-forgot-password">
+                Pozabil geslo?
+            </div><br>
+        </form>
+        <div style="text-align: center;">
+            <button class="login-button mt-5" onclick="login()">Prijavi</button>
+        </div>
+    </div>
+    <!--sign up-->
+    <div id="signup-content" class="d-none">
+        <form>
+            <div class="form-group" id="user-fullname" style="margin-top: 10%; text-align: center;">
+                <label class="login-label" for="user-fullname-input-box;">Naziv<span class="required-input">*</span></label><br>
+                <input class="login-input" type="text" id="user-fullname-input-box" placeholder="vnesi polno ime oz. naziv">
+                <div id="user-fullname-error-text" class="invalid-feedback">
+
+                </div>
+            </div>
+
+            <div class="form-group" id="user-email" style="margin-top: 5%; text-align: center;">
+                <label class="login-label" for="email-input-box;">Elektronski naslov<span class="required-input">*</span></label><br>
+                <input class="login-input" type="email" id="email-input-box" placeholder="vnesi elektronski naslov">
+                <div id="user-email-error-text" class="invalid-feedback">
+
+                </div>
+            </div>
+
+            <div class="form-group" id="username-signup" style="margin-top: 5%; text-align: center;">
+                <label class="login-label" for="username-input-box-signup;">Uporabniško ime<span class="required-input">*</span></label><br>
+                <input class="login-input" type="text" id="username-input-box-signup" placeholder="vnesi želeno uporabniško ime">
+                <div id="username-error-text" class="invalid-feedback">
+
+                </div>
+            </div>
+
+            <div class="form-group" id="password-signup" style="margin-top: 5%; text-align: center;">
+                <label class="login-label" for="password-input-box-signup">Geslo<span class="required-input">*</span></label><br>
+                <input class="login-input" type="password" id="password-input-box-signup" placeholder="vnesi geslo">
+                <div id="password-error-text" class="invalid-feedback">
+
+                </div>
+            </div>
+
+            <div class="form-group" id="password-signup-repeat" style="margin-top: 5%; text-align: center;">
+                <label class="login-label" for="password-input-box-signup-repeat">Potrditev gesla<span class="required-input">*</span></label><br>
+                <input class="login-input" type="password" id="password-input-box-signup-repeat" placeholder="ponovi geslo">
+                <div id="password-repeat-error-text" class="invalid-feedback">
+
+                </div>
+            </div>
+            <br>
+            <div class="form-check login-label">
+                <input class="login-check-input is-valid" type="checkbox" value="" id="usage-policy" required="">
+                <label class="login-check-label" for="usage-policy">
+                    Strinjam se s pogoji uporabe
+                </label>
+                <div class="invalid-feedback">
+                    Strinjanje s pogoji uporabe je obvezno!
+                </div>
+            </div>
+        </form>
+        <div style="text-align: center;">
+            <button class="login-button mt-5" onclick="register()">Registriraj</button>
+        </div>
+    </div>
+
+</div>
+
+<script>/*
+=================================================================================================================================
+   Supporting functions for login page
+=================================================================================================================================
+*/
+function login() {
+    /* if username/password OK, return AWT token*/
+    getToken()
+}
+
+function getToken(event) {
+    /* send http POST request to retrieve JWT */
+    var xhttp = new XMLHttpRequest();
+    const auth_address = location.protocol + "//" + location.host+"/token"
+    const ebook_address = location.protocol + "//" + location.host+"/ebookpage"
+    const projects_address = location.protocol + "//" + location.host+"/projects"
+
+    let p = $('#password-input-box')[0].value
+    let u = $('#username-input-box')[0].value
+
+    if (p && u) {
+        const params = {username: u, password: p}
+
+        xhttp.open("POST", auth_address);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("username="+u+"&password="+p)
+
+        xhttp.onload = function() {
+            let data=xhttp.responseText
+            if (xhttp.status==200) {
+
+                if ("access_token" in JSON.parse(data)) {
+                    /* save JWT to session storage */
+                    sessionStorage.setItem('jwtToken', JSON.parse(data)["access_token"]);
+                    document.getElementById('password-input-box').classList.remove('error');
+                    document.getElementById('username-input-box').classList.remove('error');
+                    authenticatedUser = u
+                    //document.location.href = ebook_address;
+                    document.location.href = projects_address;
+                }
+            }
+            else {
+                document.getElementById('password-input-box').classList.add('error');
+                document.getElementById('username-input-box').classList.add('error');
+            }
+        }
+    } else if (!p && !u) {
+        $('#password-input-box')[0].classList.add('is-invalid')
+        $('#username-input-box')[0].classList.add('is-invalid')
+    } else if (!u) {
+        $('#username-input-box')[0].classList.add('is-invalid')
+        $('#password-input-box')[0].classList.remove('is-invalid')
+    } else {
+        $('#password-input-box')[0].classList.add('is-invalid')
+        $('#username-input-box')[0].classList.remove('is-invalid')
+    }
+}
+
+function ebookSign(action='signin') {
+    let line_signin = $('div.line-signin')[0]
+    let line_signup = $('div.line-signup')[0]
+
+    if(action==='signin') {
+        // hide signup line
+        $('div.line-signup')[0].classList.add('d-none')
+        $('div.line-signin')[0].classList.remove('d-none')
+        // make login section active
+        $('#register-link')[0].classList.remove('active')
+        $('#login-link')[0].classList.add('active')
+        // replace content
+        $('#signup-content')[0].classList.add("d-none")
+        $('#signin-content')[0].classList.remove("d-none")
+        $('#main-box').height("500px")
+    } else {
+        // hide signin line
+        $('div.line-signin')[0].classList.add('d-none')
+        $('div.line-signup')[0].classList.remove('d-none')
+        // make signup section active
+        $('#login-link')[0].classList.remove('active')
+        $('#register-link')[0].classList.add('active')
+        // replace content
+        $('#signin-content')[0].classList.add("d-none")
+        $('#signup-content')[0].classList.remove("d-none")
+        $('#main-box').height("800px")
+    }
+}
+
+function register() {
+
+    // check if all required fields have values
+    let paramsValid = true
+    let user_fullname_el = $('#user-fullname-input-box')[0]
+    let user_email_el = $('#email-input-box')[0]
+    let username_el = $('#username-input-box-signup')[0]
+    let password_el = $('#password-input-box-signup')[0]
+    let password_repeat_el = $('#password-input-box-signup-repeat')[0]
+
+    // reset messages for invalid inputs
+    $('#username-error-text')[0].innerHTML = ""
+    $('#password-error-text')[0].innerHTML = ""
+    $('#user-email-error-text')[0].innerHTML = ""
+
+    //let fieldsToValidate = [$('#user-fullname-input-box')[0], $('#email-input-box')[0], $('#username-input-box-signup')[0], $('#password-input-box-signup')[0], $('#password-input-box-signup-repeat')[0]]
+    let fieldsToValidate = [user_fullname_el, user_email_el, username_el, password_el, password_repeat_el]
+    fieldsToValidate.forEach((el) => {
+        console.log(el)
+        if (!el.value || el.value==="") {
+            el.classList.add('is-invalid')
+            paramsValid = false
+        } else {
+            el.classList.remove('is-invalid')
+        }
+    })
+
+    // usage policy must be confirmed
+    if (!$('#usage-policy')[0].checked) {
+        $('#usage-policy')[0].classList.add('is-invalid')
+        paramsValid = false
+    } else {
+        $('#usage-policy')[0].classList.remove('is-invalid')
+    }
+
+    // if all parameters validated on the client side, send registration request
+    // NOTE: on the client side we only check if all parameters are set. The rest is validated on the server side.
+    if (paramsValid) {
+
+        var xhttp = new XMLHttpRequest();
+        const params = {
+            user_fullname: user_fullname_el.value,
+            user_email: user_email_el.value,
+            username: username_el.value,
+            password: password_el.value,
+            password_repeat: password_repeat_el.value
+        }
+
+        xhttp.open("POST", location.protocol + "//" + location.host + "/v1/register_user");
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(JSON.stringify(params));
+
+        xhttp.onload = function() {
+            if (xhttp.status != 200) {
+                if (xhttp.status == 422) {
+                    //unprocessable entity
+                    const err_data = JSON.parse(xhttp.responseText)['detail'];
+                    const err_code = err_data['error']
+                    console.log("Error code", err_code)
+
+                    if (err_code=='tts-0018') {
+                        console.log(err_data['message'])
+                        password_el.classList.add('is-invalid')
+                        $('#password-error-text')[0].innerHTML = err_data['message']
+
+                    } else if (err_code=='tts-0019') {
+                        console.log(err_data['message'])
+
+
+                    } else if (err_code=='tts-0020' || err_code=='tts-0022') {
+                        console.log(err_data['message'])
+                        user_email_el.classList.add('is-invalid')
+                        $('#user-email-error-text')[0].innerHTML = err_data['message']
+
+                    } else if (err_code=='tts-0021') {
+                        console.log(err_data['message'])
+                        username_el.classList.add('is-invalid')
+                        $('#username-error-text')[0].innerHTML = err_data['message']
+                    }
+
+                } else {
+                    //handle all other failed responses
+                    console.log("Unhandled response ...")
+                    console.log(xhttp.responseText)
+                }
+
+            } else {
+                let data=xhttp.responseText
+                console.log(data)
+                showMessageDlg('Registracija uporabnika', 'Hvala za izkazano zanimanje! Na vaĹĄ elektronski naslov smo vam poslali povezavo za dokonÄanje postopka registracije.')
+            }
+        }
+    }
+}
+
+function showMessageDlg(modalTitle, modalText) {
+    // activate the generated content as a modal full screen window
+    var myModal = new bootstrap.Modal(document.getElementById('message-dlg-box'), {keyboard: false})
+    $("#message-dlg-box-title")[0].innerText = modalTitle
+    $("#message-dlg-box-content")[0].innerText = modalText
+    myModal.show()
+}</script>

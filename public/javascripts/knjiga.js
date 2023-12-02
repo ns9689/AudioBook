@@ -18,3 +18,33 @@ function myFunction() {
         }
     }
 }
+
+//make delete request
+document.addEventListener('DOMContentLoaded', function () {
+    var deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
+    deleteSentenceButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var stavekId = this.getAttribute('data-id');
+            var knjigaId = this.getAttribute('data-knjigaId');
+            if (confirm('Ali zares želite izbrisati ta stavek?')) {
+                fetch("/knjige/" + knjigaId + "/sentences/" + stavekId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(res => {
+                    if (!res.ok) {
+                        console.log("tukaj");
+                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                    }
+                    window.location.href ="/knjige/" + knjigaId;
+                    //window.location.href ="/knjige/" + knjigaId;
+                }).catch(error => {
+                    console.log("tukaj2");
+                    // Handle errors during the DELETE request
+                    console.error('Error deleting sentence:', error.message);
+                });
+            }
+        });
+    });
+});

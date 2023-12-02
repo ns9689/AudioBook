@@ -23,15 +23,16 @@ router.delete("/knjige/:knjigaId", ctrlKnjiga.izbrisiKnjigo);
  * Stavki
  */
 router.post("/knjige/:knjigaId/sentences", ctrlStavek.novStavek);
-router.get("/knjige/:knjigaId/sentences", ctrlStavek.vsiStavki);
-router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.pridobiStavek);
+//router.get("/knjige/:knjigaId/sentences", ctrlStavek.vsiStavki);
+//router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.pridobiStavek);
 router.put("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.posodobiStavek);
 router.delete("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.izbrisiStavek);
 
 /**
  * Verzije stavka
  */
-router.post("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.novaVerzija);
+router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.novaVerzija);
+router.post("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.ustvariVerzijo);
 router.get("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.pridobiVerzijo);
 router.put("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.posodobiVerzijo);
 //ce je izbrana nova verzija za glavno verzijo, se sprozi posodobitev stavka

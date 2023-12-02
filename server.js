@@ -10,7 +10,6 @@ const bodyParser = require('body-parser');
  */
 require("./api/models/db.js");
 
-const hbsRouter = require("./api/routes/hbs");
 const apiRouter = require("./api/routes/api");
 
 /**
@@ -37,10 +36,6 @@ app.use(bodyParser.json());
 app.set("views",path.join(__dirname,"api","views")); //hbs routes ne rabimo vec
 app.set("view engine","hbs");
 
-/**
- * HBS routing
- */
-app.use("/",hbsRouter);
 
 /**
  * API routing

@@ -5,10 +5,6 @@ const versionsShema = new mongoose.Schema({
       type: String,
       required: [true, "Text is required"],
    },
-   audio: {
-      type: Buffer,
-      required: [false, "Audio file is required"],
-   },
    state: {
       type: String,
       default: "search",
@@ -17,11 +13,14 @@ const versionsShema = new mongoose.Schema({
 });
 
 const sentencesShema = new mongoose.Schema({
-   text: {
+   originalText: {
       type: String,
       required: [true, "Text is required"],
    },
-   audio: {
+   chosenText: {
+      type: String,
+   },
+   chosenAudio: {
       type: Buffer,
       required: [false, "Audio file is required"],
    },
