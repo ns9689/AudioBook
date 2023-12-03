@@ -1,8 +1,14 @@
 <div class="container">
 
     <div class="row">
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>
+            <a href="/knjige"><button type="button" class="btn btn-primary" id="btn-normalize">Shrani projekt</button></a>
+            <button type="button" class="btn btn-success" id="btn-prepare">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
+        </div>
         <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the sentence...">
         <div class="col-sm-2"></div>
+
         <div class="col-sm-12">
             <table id="table" class="table table-hover" data-total-field="count">
                 <div id="debugArea"></div>
@@ -18,7 +24,7 @@
                         <tr class="search {{this.state}}">
                             <th scope="row">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
-                            <td>{{this.versions}}</td>
+                            <!--<td>{{this.versions}}</td>-->
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
@@ -37,29 +43,35 @@
                                                     Your browser does not support the audio element.
                                                 </audio>
                                             </td>
-                                            <td>
+                                            <!--<td>
                                                 <button class="btn edit"><i class="bi bi-pen"></i></button>
                                                 <button class="btn edit"><i class="bi bi-file-play"></i></button>
                                                 <button class="btn edit"><i class="bi-bookmark-star"></i></button>
                                                 <button class="btn edit"><i class="bi-bookmark-x"></i></button>
                                                 <button class="btn edit"><i class="bi bi-trash"></i></button>
-                                            </td>
+                                            </td>-->
                                             <td>
                                                 {{#each versions}}
                                                     <button class="btn btn{{@index}} btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">{{@index}}.</button>
-
                                                     <!-- modal -->
-
                                                     <div class="modal fade" id="b{{this._id}}" tabindex="-1">
                                                         <div class="modal-dialog" style="max-width: 80%;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel"><b>{{this.text}}</b></h5>
-
+                                                                    <h5 class="modal-title" id="exampleModalLabel"><b>Verzija {{@index}}</b></h5>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <input type="text" class="form-control" value="{{this.text}}">
-                                                                    </br>
+                                                                    <form action="/knjige/{{../knjiga._id}}/sentences/{{this._id}}" method="put" id="correctVersion">
+                                                                        <div class="col-sm-12">
+                                                                            <label for="floatingInput">Stara verzija stavka</label>
+                                                                            <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.text}}" disabled>
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                            <label for="floatingInput">Nova verzija stavka</label>
+                                                                            <input type="text" class="form-control" id="floatingInput" name="newVersion" value="{{this.text}}">
+                                                                        </div>
+                                                                    </form>
+                                                                    <br>
                                                                     <audio controls>
                                                                         <!--<source src="horse.ogg" type="audio/ogg">
                                                                         <source src="horse.mp3" type="audio/mpeg">-->
@@ -72,14 +84,54 @@
                                                                     <button class="btn edit"><i class="bi-bookmark-star"></i></button>
                                                                     <button class="btn edit"><i class="bi-bookmark-x"></i></button>
                                                                     <button class="btn edit"><i class="bi bi-trash"></i></button>
-                                                                    <button class="btn edit" data-bs-dismiss="modal"><i class="bi bi-x"></i></button>
+                                                                    <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 {{/each}}
-                                                <a href="/knjige/{{../knjiga._id}}/sentences/{{this._id}}"><button type="button" class="btn btn-circle btn-sm"><b>+</b></button></a>
-                                                <button class="btn btn-circle btn-sm" ><b>+</b></button>
+
+                                                <button class="btn btn-circle btn-sm" data-toggle="modal" data-target="#newVersion{{this._id}}"><b>+</b></button>
+                                                <!-- modal-->
+                                                <div class="modal fade" id="newVersion{{this._id}}" tabindex="-1">
+                                                    <div class="modal-dialog" style="max-width: 80%;">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel"><b>Nova verzija stavka</b></h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="/knjige/{{../knjiga._id}}/sentences/{{this._id}}" method="post" id="newVersion">
+                                                                    <div class="col-sm-12">
+                                                                        <label for="floatingInput">Stara verzija</label>
+                                                                        <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.chosenText}}" disabled>
+                                                                    </div>
+                                                                    <div class="col-sm-12">
+                                                                        <label for="floatingInput">Nova verzija</label>
+                                                                        <input type="text" class="form-control" id="floatingInput" name="text" value="{{this.chosenText}}">
+                                                                    </div>
+                                                                    <div class="col-sm-12">
+                                                                        <input type="submit" value="Shrani"
+                                                                               class="popover-dismiss col-lg-4 mx-auto col-sm-3 mt-3 btn btn-primary">
+                                                                    </div>
+                                                                </form>
+                                                                <br>
+                                                                <audio controls>
+                                                                    <!--<source src="horse.ogg" type="audio/ogg">
+                                                                    <source src="horse.mp3" type="audio/mpeg">-->
+                                                                    Your browser does not support the audio element.
+                                                                </audio>
+                                                            </div>
+                                                            <div class="modal-footer player">
+                                                                <button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>
+                                                                <button class="btn edit"><i class="bi bi-file-play"></i></button>
+                                                                <button class="btn edit"><i class="bi-bookmark-star"></i></button>
+                                                                <button class="btn edit"><i class="bi-bookmark-x"></i></button>
+                                                                <button class="btn edit"><i class="bi bi-trash"></i></button>
+                                                                <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -91,15 +143,11 @@
                 </tbody>
             </table>
 
-            <div class="pagination" id="pagination">
-                <!-- Pagination links will be dynamically added here -->
-            </div>
-
-            <p></p>
-            <button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>
-            <button type="button" class="btn btn-primary" id="btn-normalize">Shrani projekt</button>
-            <button type="button" class="btn btn-success" id="btn-prepare">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
-
+            <!--<div>
+                <button class="pagination-arrow" onclick="prevPage()">Previous</button>
+                <ul class="pagination" id="pagination"></ul>
+                <button class="pagination-arrow" onclick="nextPage()">Next</button>
+            </div>-->
 
             <div class="float-end">
                 <button class="btn btn-secondary" id="btn-settings" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>

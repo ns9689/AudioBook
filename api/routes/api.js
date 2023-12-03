@@ -31,9 +31,9 @@ router.delete("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.izbrisiStave
 /**
  * Verzije stavka
  */
-router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.novaVerzija);
+//router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.novaVerzija);
 router.post("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.ustvariVerzijo);
-router.get("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.pridobiVerzijo);
+//router.get("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.pridobiVerzijo);
 router.put("/knjige/:knjigaId/sentences/:sentenceId/:optionId", ctrlVerzija.posodobiVerzijo);
 //ce je izbrana nova verzija za glavno verzijo, se sprozi posodobitev stavka
 router.delete("/knjige/:knjigaId/sentences/:sentenceId", ctrlVerzija.izbrisiVerzijo);

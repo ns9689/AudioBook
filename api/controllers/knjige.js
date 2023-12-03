@@ -69,12 +69,48 @@ const ustvariKnjigo = async (req, res) => {
     let podatki = req.body;
     await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary",
         sentences: [{
-            originalText: "text1",
-            chosenText: "text1",
+            originalText: "Rada",
+            chosenText: "Rada",
             chosenAudio: null,
             state: "table-secondary",
             versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {originalText: "text2", chosenText: "text2", chosenAudio: null, state: "table-secondary", versions: [{text: "text21", state: "table-secondary"}, {text: "text22", state: "table-secondary"}, {text: "text23", state: "table-secondary"}]}]},
+        }, {
+            originalText: "te",
+            chosenText: "te",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {
+            originalText: "imam",
+            chosenText: "imam",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {
+            originalText: "<3>",
+            chosenText: "<3",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {
+            originalText: " ",
+            chosenText: " ",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {
+            originalText: "Tvoja",
+            chosenText: "Tvoja",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }, {
+            originalText: "lumpa",
+            chosenText: "lumpa",
+            chosenAudio: null,
+            state: "table-secondary",
+            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
+        }]},
         function (error, knjiga) {
             if(!error){
                 Knjiga.find({},function (error, knjige) {
