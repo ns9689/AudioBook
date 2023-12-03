@@ -24,7 +24,8 @@
                         <tr class="search {{this.state}}">
                             <th scope="row">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
-                            <!--<td>{{this.versions}}</td>-->
+                            <td>{{this.versions}}</td>
+                            <td>{{this._id}}</td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
@@ -43,13 +44,6 @@
                                                     Your browser does not support the audio element.
                                                 </audio>
                                             </td>
-                                            <!--<td>
-                                                <button class="btn edit"><i class="bi bi-pen"></i></button>
-                                                <button class="btn edit"><i class="bi bi-file-play"></i></button>
-                                                <button class="btn edit"><i class="bi-bookmark-star"></i></button>
-                                                <button class="btn edit"><i class="bi-bookmark-x"></i></button>
-                                                <button class="btn edit"><i class="bi bi-trash"></i></button>
-                                            </td>-->
                                             <td>
                                                 {{#each versions}}
                                                     <button class="btn btn{{@index}} btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">{{@index}}.</button>
@@ -61,14 +55,19 @@
                                                                     <h5 class="modal-title" id="exampleModalLabel"><b>Verzija {{@index}}</b></h5>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form action="/knjige/{{../knjiga._id}}/sentences/{{this._id}}" method="put" id="correctVersion">
+                                                                    <form action="/knjige/{{../../knjiga._id}}/sentences/{{../this._id}}/versions/{{this._id}}" method="post" id="correctVersion">
+                                                                        <input type="hidden" name="_method" value="PUT">
                                                                         <div class="col-sm-12">
                                                                             <label for="floatingInput">Stara verzija stavka</label>
                                                                             <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.text}}" disabled>
                                                                         </div>
                                                                         <div class="col-sm-12">
                                                                             <label for="floatingInput">Nova verzija stavka</label>
-                                                                            <input type="text" class="form-control" id="floatingInput" name="newVersion" value="{{this.text}}">
+                                                                            <input type="text" class="form-control" id="floatingInput" name="text" value="{{this.text}}">
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                            <input type="submit" value="Shrani"
+                                                                                   class="popover-dismiss col-lg-4 mx-auto col-sm-3 mt-3 btn btn-primary">
                                                                         </div>
                                                                     </form>
                                                                     <br>
@@ -83,7 +82,7 @@
                                                                     <button class="btn edit"><i class="bi bi-file-play"></i></button>
                                                                     <button class="btn edit"><i class="bi-bookmark-star"></i></button>
                                                                     <button class="btn edit"><i class="bi-bookmark-x"></i></button>
-                                                                    <button class="btn edit"><i class="bi bi-trash"></i></button>
+                                                                    <button type="button" class="btn delete-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}"><i class="bi bi-trash"></i></button>
                                                                     <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                                                 </div>
                                                             </div>
@@ -100,7 +99,7 @@
                                                                 <h5 class="modal-title" id="exampleModalLabel"><b>Nova verzija stavka</b></h5>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form action="/knjige/{{../knjiga._id}}/sentences/{{this._id}}" method="post" id="newVersion">
+                                                                <form action="/knjige/{{../knjiga._id}}/sentences/{{this._id}}/versions" method="post" id="newVersion">
                                                                     <div class="col-sm-12">
                                                                         <label for="floatingInput">Stara verzija</label>
                                                                         <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.chosenText}}" disabled>
@@ -121,12 +120,7 @@
                                                                     Your browser does not support the audio element.
                                                                 </audio>
                                                             </div>
-                                                            <div class="modal-footer player">
-                                                                <button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>
-                                                                <button class="btn edit"><i class="bi bi-file-play"></i></button>
-                                                                <button class="btn edit"><i class="bi-bookmark-star"></i></button>
-                                                                <button class="btn edit"><i class="bi-bookmark-x"></i></button>
-                                                                <button class="btn edit"><i class="bi bi-trash"></i></button>
+                                                            <div class="modal-footer">
                                                                 <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                                             </div>
                                                         </div>

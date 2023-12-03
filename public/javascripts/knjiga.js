@@ -21,11 +21,12 @@ function myFunction() {
 
 //make delete request
 document.addEventListener('DOMContentLoaded', function () {
-    var deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
+    const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
+    const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
     deleteSentenceButtons.forEach(function (button) {
         button.addEventListener('click', function () {
-            var stavekId = this.getAttribute('data-id');
-            var knjigaId = this.getAttribute('data-knjigaId');
+            const stavekId = this.getAttribute('data-id');
+            const knjigaId = this.getAttribute('data-knjigaId');
             if (confirm('Ali zares želite izbrisati ta stavek?')) {
                 fetch("/knjige/" + knjigaId + "/sentences/" + stavekId, {
                     method: 'DELETE',
@@ -41,6 +42,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     //window.location.href ="/knjige/" + knjigaId;
                 }).catch(error => {
                     console.log("tukaj2");
+                    // Handle errors during the DELETE request
+                    console.error('Error deleting sentence:', error.message);
+                });
+            }
+        });
+    });
+    deleteVersionButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const verzijaId = this.getAttribute('data-verzijaId');
+            const stavekId = this.getAttribute('data-stavekId');
+            const knjigaId = this.getAttribute('data-knjigaId');
+            console.log(verzijaId);
+            console.log(stavekId);
+            console.log(knjigaId);
+            if (confirm('Ali zares želite izbrisati to verzijo?')) {
+                fetch("/knjige/" + knjigaId + "/sentences/" + stavekId + "/versions/" + verzijaId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(res => {
+                    if (!res.ok) {
+                        console.log("tukaj");
+                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                    }
+                    window.location.href = "/knjige/" + knjigaId;
+                }).catch(error => {
                     // Handle errors during the DELETE request
                     console.error('Error deleting sentence:', error.message);
                 });

@@ -1,34 +1,10 @@
 //make delete request
 document.addEventListener('DOMContentLoaded', function () {
-    var deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
-    var deleteButtons = document.querySelectorAll('.delete-btn');
-    var deleteAllButtons = document.querySelectorAll('.deleteAll-btn');
-    deleteSentenceButtons.forEach(function (button) {
-        button.addEventListener('click', function () {
-            var stavekId = this.getAttribute('data-id');
-            //var knjigaId = this.getAttribute('data-id'[1]);
-            console.log(stavekId);
-            if (confirm('Ali zares želite izbrisati ta stavek?')) {
-                fetch("/knjige/" + knjigaId + "sentences" + stavekId, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }).then(res => {
-                    if (!res.ok) {
-                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
-                    }
-                    window.location.href ="/knjige";
-                }).catch(error => {
-                        // Handle errors during the DELETE request
-                        console.error('Error deleting book:', error.message);
-                    });
-            }
-        });
-    });
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    const deleteAllButtons = document.querySelectorAll('.deleteAll-btn');
     deleteButtons.forEach(function (button) {
         button.addEventListener('click', function () {
-            var knjigaId = this.getAttribute('data-id');
+            const knjigaId = this.getAttribute('data-id');
             if (confirm('Ali zares želite izbrisati to knjigo?')) {
                 fetch("/knjige/" + knjigaId, {
                     method: 'DELETE',
