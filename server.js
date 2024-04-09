@@ -5,6 +5,8 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require('body-parser');
 
+
+
 /**
  * Database connection
  */
@@ -35,6 +37,7 @@ app.use(bodyParser.json());
  */
 app.set("views",path.join(__dirname,"api","views")); //hbs routes ne rabimo vec
 app.set("view engine","hbs");
+
 
 
 /**

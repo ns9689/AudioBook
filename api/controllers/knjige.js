@@ -67,7 +67,10 @@ const novaKnjiga = (req, res) => {
 
 const ustvariKnjigo = async (req, res) => {
     let podatki = req.body;
-    await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary",
+    let file = req.file;
+    console.log(podatki);
+    console.log(file);
+    await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary", file: file,
         sentences: [{
             originalText: "Rada",
             chosenText: "Rada",

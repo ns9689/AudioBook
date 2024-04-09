@@ -38,11 +38,11 @@ const sentencesShema = new mongoose.Schema({
 const knjigaShema = new mongoose.Schema({
    author: {
       type: String, //Uporabnik, //objekt
-      required: [true, "Uporabnik is required"],
+      //required: [true, "Uporabnik is required"],
    },
    title: {
       type: String,
-      required: [true, "Title is required!"],
+      //required: [true, "Title is required!"],
    },
    originalText: {
       type: String,
@@ -60,6 +60,10 @@ const knjigaShema = new mongoose.Schema({
       type: String,
       default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = finished (green)
       required: [true, "State is required"],
+   },
+   file: {
+      data: Buffer, // For storing file data
+      contentType: String,
    },
 
 });

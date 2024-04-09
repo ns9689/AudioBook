@@ -55,8 +55,7 @@
                                                                     <h5 class="modal-title" id="exampleModalLabel"><b>Verzija {{@index}}</b></h5>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form action="/knjige/{{../../knjiga._id}}/sentences/{{../this._id}}/versions/{{this._id}}" method="post" id="correctVersion">
-                                                                        <input type="hidden" name="_method" value="PUT">
+                                                                    <form action="/knjige/{{../../knjiga._id}}/sentences/{{../this._id}}/versions/{{this._id}}" method="PUT" id="correctVersion">
                                                                         <div class="col-sm-12">
                                                                             <label for="floatingInput">Stara verzija stavka</label>
                                                                             <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.text}}" disabled>
@@ -78,7 +77,7 @@
                                                                     </audio>
                                                                 </div>
                                                                 <div class="modal-footer player">
-                                                                    <button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>
+                                                                    <!--<button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>-->
                                                                     <button class="btn edit"><i class="bi bi-file-play"></i></button>
                                                                     <button class="btn edit"><i class="bi-bookmark-star"></i></button>
                                                                     <button class="btn edit"><i class="bi-bookmark-x"></i></button>
