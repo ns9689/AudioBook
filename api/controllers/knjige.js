@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Knjiga = mongoose.model("Knjiga");
+const mammoth = require('mammoth');
 
 const izbrisiKnjigo =  async (req, res) => {
     const izbris = await Knjiga.deleteOne({_id: req.params.knjigaId});
@@ -65,13 +66,45 @@ const novaKnjiga = (req, res) => {
     })
 };
 
+function extractTextFromWord(wordFile) {
+    return new Promise((resolve, reject) => {
+        mammoth.extractRawText({ path: wordFile })
+            .then(result => {
+                resolve(result.value);
+            })
+            .catch(error => {
+                reject(error);
+            });
+    });
+}
+
 const ustvariKnjigo = async (req, res) => {
     let podatki = req.body;
     let file = req.file;
-    console.log(podatki);
-    console.log(file);
-    await Knjiga.create({author: podatki.author, title: podatki.title, originalText: podatki.text, dateCreated: new Date().toJSON().slice(0, 10), state: "table-secondary", file: file,
-        sentences: [{
+    let textToUse = "";
+    await extractTextFromWord(file.path)
+        .then(text => textToUse = text)
+        //.then(text => console.log(text.split(/(?<=[.!?"”])\s+/)))
+        .catch(error => console.error(error));
+
+    textToUse = textToUse.split(/(?<=[.!?"”\]\n])\s+/);
+
+    const mappedSentences = textToUse.map(sentence => ({
+        originalText: sentence,
+        chosenText: sentence,
+        chosenAudio: null,
+        state: "table-secondary" // Set the default state for each sentence
+    }));
+
+    await Knjiga.create({
+            author: podatki.author,
+            title: podatki.title,
+            originalText: podatki.text,
+            dateCreated: new Date().toJSON().slice(0, 10),
+            state: "table-secondary",
+            file: file,
+            sentences: mappedSentences,
+            /*[{
             originalText: "Rada",
             chosenText: "Rada",
             chosenAudio: null,
@@ -90,7 +123,7 @@ const ustvariKnjigo = async (req, res) => {
             state: "table-secondary",
             versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
         }, {
-            originalText: "<3>",
+            originalText: "<3",
             chosenText: "<3",
             chosenAudio: null,
             state: "table-secondary",
@@ -113,7 +146,7 @@ const ustvariKnjigo = async (req, res) => {
             chosenAudio: null,
             state: "table-secondary",
             versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }]},
+        }]*/},
         function (error, knjiga) {
             if(!error){
                 Knjiga.find({},function (error, knjige) {

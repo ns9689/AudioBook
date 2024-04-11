@@ -15,7 +15,7 @@ const versionsShema = new mongoose.Schema({
 const sentencesShema = new mongoose.Schema({
    originalText: {
       type: String,
-      required: [true, "Text is required"],
+      required: [false, "Sentence text is required"],
    },
    chosenText: {
       type: String,
@@ -27,7 +27,7 @@ const sentencesShema = new mongoose.Schema({
    state: {
       type: String,
       default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = selected (green)
-      required: [true, "State is required"],
+      required: [false, "State is required"],
    },
    versions: {
       type: [versionsShema],
