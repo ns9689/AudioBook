@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const versionsShema = new mongoose.Schema({
    text: {
       type: String,
-      required: [true, "Text is required"],
+      //required: [true, "Text is required"],
    },
    state: {
       type: String,
-      default: "search",
-      required: [true, "State is required"],
+      //default: "green",
+      //required: [true, "State is required"],
    },
 });
 
@@ -26,7 +26,7 @@ const sentencesShema = new mongoose.Schema({
    },
    state: {
       type: String,
-      default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = selected (green)
+      default: "table-secondary", //"" = did not start (background color), "grey" = working on it (grey), "green" = selected (green)
       required: [false, "State is required"],
    },
    versions: {
@@ -58,7 +58,7 @@ const knjigaShema = new mongoose.Schema({
    },
    state: {
       type: String,
-      default: "search", //0 = did not start (background color), 1 = working on it (grey), 2 = finished (green)
+      default: "table-secondary", //0 = did not start (background color), 1 = working on it (grey), 2 = finished (green)
       required: [true, "State is required"],
    },
    file: {

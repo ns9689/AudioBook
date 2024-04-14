@@ -12,17 +12,23 @@ const izbrisiVerzijo = async (req, res) => {
         if (!stavek) {
             return res.status(404).json({error: "Sentence not found"});
         } else {
-            const verzija = stavek.versions.findIndex((version) => version._id == req.params.versionId);
-            stavek.versions.splice(verzija, 1);
+            const verzijaId = stavek.versions.findIndex((version) => version._id == req.params.versionId);
+            const verzija = stavek.versions.id(req.params.versionId);
+            const verzijaState = verzija.state;
+            stavek.versions.splice(verzijaId, 1);
+            //if (verzijaState === "green") {
+            if (stavek.versions.length < 1 || verzijaState === "green") {
+                stavek.chosenText = stavek.originalText;
+                stavek.versions.length < 1 ? stavek.state = "" : stavek.state = "grey";
+            }
             await knjiga.save();
             res.sendStatus(204);
         }
     }
 };
 
-const posodobiVerzijo = async (req, res) => { //naredi PUT, zdaj je POST!!!!!!!
+const posodobiVerzijo = async (req, res) => { //naredi PUT, zdaj je POST!!!!!!! DONE, se vedno post, ampak samo posodobitev
     let podatki = req.body;
-    console.log(podatki);
     const knjigaId = req.params.knjigaId;
     const stavekId = req.params.sentenceId;
     const verzijaId = req.params.versionId;
@@ -33,13 +39,45 @@ const posodobiVerzijo = async (req, res) => { //naredi PUT, zdaj je POST!!!!!!!
             return res.status(404).json({error: 'Sentence not found'});
         } else {
             const verzija = stavek.versions.id(verzijaId);
-            stavek.versions.push({
-                text: podatki.text
-            });
+            console.log(verzija);
+            if (!verzija) {
+                return res.status(404).json({error: 'Version not found'});
+            } else {
+                if (podatki.izbranaVerzija === "true") {
+                    //izberi verzijo
+                    if (verzija.state === "green") {
+                        //DO NOTHING, ce je ze od prej izbrana
+                    } else {
+                        for (let i = 0; i < stavek.versions.length; i++) {
+                            stavek.versions[i].state = "";
+                        }
+                        verzija.state = "green";
+                        stavek.chosenText = verzija.text;
+                        stavek.state = "green";
+                    }
+                    //posodobi stavek z novo vsebino + naredi zelen stavek + zelena verzija
+                } else if (podatki.izbranaVerzija === "false") {
+                    //odizberi verzijo
+                    if (verzija.state !== "green") {
+                        //DO NOTHING, ce verzija prej sploh ni bila izbrana
+                    } else {
+                        verzija.state = "table-secondary";
+                        stavek.state = "grey";
+                        stavek.chosenText = stavek.originalText;
+                        //posodobi stavek z novo vsebino + naredi zelen stavek + zelena verzija
+                    }
+                } else {
+                    //samo posodobitev texta
+                    verzija.text = podatki.text;
+                    if (verzija.state === "green") {
+                        stavek.chosenText = verzija.text;
+                    }
+                }
+            }
             await knjiga.save();
             res.redirect("/knjige/" + knjigaId);
         }
-    }else {
+    } else {
         res.status(404).json({
             message: "Knjiga with id '" + req.params.knjigaId + "' does not exist"
         });
@@ -70,6 +108,9 @@ const ustvariVerzijo = async (req, res) => {
             stavek.versions.push({
                 text: podatki.text
             });
+            if (stavek.versions.length < 2) {
+                stavek.state = "grey";
+            }
             await knjiga.save();
             res.redirect("/knjige/" + knjigaId);
         }

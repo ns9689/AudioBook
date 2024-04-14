@@ -19,10 +19,10 @@ function myFunction() {
     }
 }
 
-//make delete request
 document.addEventListener('DOMContentLoaded', function () {
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
+    const updateVersionButtons = document.querySelectorAll('.update-version-btn');
     deleteSentenceButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             const stavekId = this.getAttribute('data-id');
@@ -53,9 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const verzijaId = this.getAttribute('data-verzijaId');
             const stavekId = this.getAttribute('data-stavekId');
             const knjigaId = this.getAttribute('data-knjigaId');
-            console.log(verzijaId);
-            console.log(stavekId);
-            console.log(knjigaId);
             if (confirm('Ali zares želite izbrisati to verzijo?')) {
                 fetch("/knjige/" + knjigaId + "/sentences/" + stavekId + "/versions/" + verzijaId, {
                     method: 'DELETE',
@@ -73,6 +70,46 @@ document.addEventListener('DOMContentLoaded', function () {
                     console.error('Error deleting sentence:', error.message);
                 });
             }
+        });
+    });
+    updateVersionButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const verzijaId = this.getAttribute('data-verzijaId');
+            const stavekId = this.getAttribute('data-stavekId');
+            const knjigaId = this.getAttribute('data-knjigaId');
+            const izbranaVerzija = this.getAttribute('data-izbranaVerzija');
+            const postData = {
+                izbranaVerzija: izbranaVerzija,
+            };
+            let jsonStr = "";
+            try {
+                jsonStr = JSON.stringify(postData);
+            } catch (error) {
+                console.error("Error while stringifying JSON:", error);
+            }
+            console.log(jsonStr);
+            fetch("/knjige/" + knjigaId + "/sentences/" + stavekId + "/versions/" + verzijaId, {
+                method: 'POST',
+                body: jsonStr,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(res => {
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                }
+                window.location.href = "/knjige/" + knjigaId;
+                /*const targetTd = document.getElementById("661c5b9b6108ad4cdfea3676");
+                if (targetTd) {
+                    targetTd.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest"
+                    });
+                }*/
+                //window.location.href = "/knjige/" + knjigaId;
+            }).catch(error => {
+                console.error('Error updating sentence:', error.message);
+            });
         });
     });
 });

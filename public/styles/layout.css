@@ -62,9 +62,17 @@ thead {
 }
 
 .modal {
-    position: absolute;
+    position: center;
     float: left;
     left: 50%;
     top: 65%;
     transform: translate(-50%, -50%);
+}
+
+.grey {
+    background-color: grey; !important;
+}
+
+.green {
+    background-color: mediumseagreen; !important;
 }

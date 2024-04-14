@@ -21,18 +21,18 @@
 
                 <tbody>
                     {{#each knjiga.sentences}}
-                        <tr class="search {{this.state}}">
-                            <th scope="row">{{@index}}</th>
+                        <tr class="search table-secondary {{this._id}}">
+                            <th scope="row" style="background-color: {{this.state}}">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
-                            <td>{{this.versions}}</td>
-                            <td>{{this._id}}</td>
+                            <!--<td>{{this.versions}}</td>
+                            <td>{{this._id}}</td>-->
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
                         </tr>
 
                         <tr id="a{{this._id}}" class="collapse" aria-labelledby="headingOne" data-parent="#table">
-                            <td colspan="12" class="{{this.state}}">
+                            <td colspan="12" class="table-secondary">
                                 <div >
                                     <table class="table">
                                         <tbody>
@@ -46,7 +46,7 @@
                                             </td>
                                             <td>
                                                 {{#each versions}}
-                                                    <button class="btn btn{{@index}} btn-circle btn-sm" data-toggle="modal" data-target="#b{{this._id}}">{{@index}}.</button>
+                                                    <button class="btn btn{{@index}} btn-circle btn-sm {{this.state}}" data-toggle="modal" data-target="#b{{this._id}}">{{@index}}.</button>
                                                     <!-- modal -->
                                                     <div class="modal fade" id="b{{this._id}}" tabindex="-1">
                                                         <div class="modal-dialog" style="max-width: 80%;">
@@ -55,7 +55,7 @@
                                                                     <h5 class="modal-title" id="exampleModalLabel"><b>Verzija {{@index}}</b></h5>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form action="/knjige/{{../../knjiga._id}}/sentences/{{../this._id}}/versions/{{this._id}}" method="PUT" id="correctVersion">
+                                                                    <form action="/knjige/{{../../knjiga._id}}/sentences/{{../this._id}}/versions/{{this._id}}" method="POST" id="correctVersion">
                                                                         <div class="col-sm-12">
                                                                             <label for="floatingInput">Stara verzija stavka</label>
                                                                             <input type="text" class="form-control" id="floatingInput" name="oldVersion" value="{{this.text}}" disabled>
@@ -79,8 +79,10 @@
                                                                 <div class="modal-footer player">
                                                                     <!--<button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>-->
                                                                     <button class="btn edit"><i class="bi bi-file-play"></i></button>
-                                                                    <button class="btn edit"><i class="bi-bookmark-star"></i></button>
-                                                                    <button class="btn edit"><i class="bi-bookmark-x"></i></button>
+                                                                    <!--<button class="btn edit"><i class="bi-bookmark-star"></i></button>
+                                                                    <button class="btn edit"><i class="bi-bookmark-x"></i></button>-->
+                                                                    <button type="button" class="btn update-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="false"><i class="bi bi-bookmark-x"></i></button>
+                                                                    <button type="button" class="btn update-version-btn {{this.state}}" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="true"><i class="bi bi-bookmark-star"></i></button>
                                                                     <button type="button" class="btn delete-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}"><i class="bi bi-trash"></i></button>
                                                                     <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                                                 </div>
