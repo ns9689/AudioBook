@@ -66,9 +66,9 @@ const novaKnjiga = (req, res) => {
     })
 };
 
-function extractTextFromWord(wordFile) {
+function extractTextFromDocx(docxFile) {
     return new Promise((resolve, reject) => {
-        mammoth.extractRawText({ path: wordFile })
+        mammoth.extractRawText({ path: docxFile })
             .then(result => {
                 resolve(result.value);
             })
@@ -82,11 +82,23 @@ const ustvariKnjigo = async (req, res) => {
     let podatki = req.body;
     let file = req.file;
     let textToUse = "";
-    await extractTextFromWord(file.path)
-        .then(text => textToUse = text)
-        //.then(text => console.log(text.split(/(?<=[.!?"”])\s+/)))
-        .catch(error => console.error(error));
-
+    const contentType = file.mimetype;
+    if (contentType === 'application/msword' || contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        //proceed
+    } else {
+        return res.status(400).json({ error: 'Uploaded file is not a Word document' });
+    }
+    const fileExtension = file.originalname.split(".").pop().toLowerCase();
+    if (fileExtension === "docx") {
+        await extractTextFromDocx(file.path)
+            .then(text => textToUse = text)
+            //.then(text => console.log(text.split(/(?<=[.!?"”])\s+/)))
+            .catch(error => console.error(error));
+    } else if (fileExtension === "doc") {
+        //not yet supported
+    } else {
+        console.error("Unsupported file type");
+    }
     textToUse = textToUse.split(/(?<=[.!?"”\]\n])\s+/);
 
     const mappedSentences = textToUse.map(sentence => ({

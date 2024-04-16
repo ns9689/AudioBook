@@ -4,6 +4,8 @@ body {
     min-height: 100%;
 }
 
+/*body .modal-dialog { margin-left: 0 }*/
+
 .form-nova {
     color: #f1f1f1;
 }
@@ -66,6 +68,14 @@ thead {
     float: left;
     left: 50%;
     top: 65%;
+    transform: translate(-50%, -50%);
+}
+
+.modal.settings {
+    position: center;
+    float: left;
+    left: 50%;
+    top: 55%;
     transform: translate(-50%, -50%);
 }
 

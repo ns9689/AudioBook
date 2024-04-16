@@ -2,11 +2,81 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>
+            <!--<button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>-->
+            <button class="btn btn-dark" id="btn-settings" type="button" data-toggle="modal" data-target="#offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
             <a href="/knjige"><button type="button" class="btn btn-primary" id="btn-normalize">Shrani projekt</button></a>
             <button type="button" class="btn btn-success" id="btn-prepare">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
         </div>
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the sentence...">
+        <div> <!--//SETTINGS-->
+            <!-- modal -->
+            <div class="modal fade settings" id="offcanvasLeft" tabindex="-1">
+                <div class="modal-dialog" style="max-width: 80%;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"><b>Nastavitve</b></h5>
+                        </div>
+                        <div class="modal-body">
+                            <!--Voice selector-->
+                            <h6 class="settings-header" id="voice-setting"><a data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="true" href="#voice-settings" onclick="toggleCollapseButton(this)" class=""><i class="clsbtn fa-fw fa-chevron-up fa-solid" aria-hidden="true"></i></a> Nastavitve glasu</h6>
+                            <div class="col-md multi-collapse collapse show" id="voice-settings-voice-selector" style="">
+                                <div class="form-floating">
+                                    <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
+                                        <option value="1">ajda</option><option value="2">jure</option><option value="3">ziga</option></select>
+                                    <label for="floatingSelectGrid">Govorec</label>
+                                </div>
+                            </div>
+                            <br>
+                            <!--Prosody settings-->
+                            <div class="multi-collapse collapse show" id="voice-settings-voice-prosody" style="">
+                                <label for="paceValue" class="form-label" id="labelPace">Tempo: 1</label>
+                                <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="paceValue" oninput="$('#labelPace')[0].innerHTML='Tempo: '.concat(this.value)">
+
+                                <label for="pitchValueShift" class="form-label" id="labelPitchShift">Višina-zamik: 0</label>
+                                <input type="range" class="form-range" min="-50" max="50" value="0" id="pitchValueShift" oninput="$('#labelPitchShift')[0].innerHTML='Višina-zamik: '.concat(this.value)">
+
+                                <label for="pitchValueAmp" class="form-label" id="labelPitchAmp">Višina-faktor ojačitve: 1</label>
+                                <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="pitchValueAmp" oninput="$('#labelPitchAmp')[0].innerHTML='Višina-faktor ojačitve: '.concat(this.value)">
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                            <!--Preprocessing options-->
+                            <h6 class="settings-header" id="text-preprocessing-setting"><a data-bs-toggle="collapse" href="#text-preprocessing" aria-expanded="true" onclick="toggleCollapseButton(this)" class=""><i class="clsbtn fa-fw fa-chevron-up fa-solid" aria-hidden="true"></i></a> Predobdelava besedila</h6>
+                            <div class="collapse show" id="text-preprocessing" style="">
+                                <br>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="cb-normalize" checked="">
+                                    <label class="form-check-label" for="cb-normalize">Normaliziraj</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="cb-accentuate" checked="">
+                                    <label class="form-check-label" for="cb-accentuate">Naglasi</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="simple-accentuation" checked="">
+                                    <label class="form-check-label" for="simple-accentuation">
+                                        Uporabi enostavno naglaševanje
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="caching" checked="">
+                                    <label class="form-check-label" for="caching">
+                                        Uporabi že sintetizirano besedilo
+                                    </label>
+                                </div>
+                                <br>
+                                <button class="btn btn-primary"  data-dismiss="modal">Shrani</button>
+                                <div class="modal-footer player">
+                                    <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="myInput"></label><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the sentence...">
         <div class="col-sm-2"></div>
 
         <div class="col-sm-12">
@@ -138,84 +208,14 @@
                 </tbody>
             </table>
 
-            <!--<div>
+            <div>
                 <button class="pagination-arrow" onclick="prevPage()">Previous</button>
                 <ul class="pagination" id="pagination"></ul>
                 <button class="pagination-arrow" onclick="nextPage()">Next</button>
-            </div>-->
+            </div>
 
             <div class="float-end">
-                <button class="btn btn-secondary" id="btn-settings" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel" style="visibility: hidden;" aria-hidden="true">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasLeftLabel">Nastavitve</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body small">
-                        <div class="col-md">
-                            <div class="form-floating">
-                                <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-
-                                </select>
-                                <label for="floatingSelectGrid">Govorec</label>
-                            </div>
-                        </div>
-                        <br>
-
-                        <label for="paceValue" class="form-label" id="labelPace">Tempo: 1</label>
-                        <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="paceValue" oninput="$('#labelPace')[0].innerHTML='Tempo: '.concat(this.value)">
-
-                        <label for="pitchValueShift" class="form-label" id="labelPitchShift">Višina-zamik: 0</label>
-                        <input type="range" class="form-range" min="-50" max="50" value="0" id="pitchValueShift" oninput="$('#labelPitchShift')[0].innerHTML='Višina-zamik: '.concat(this.value)">
-
-                        <label for="pitchValueAmp" class="form-label" id="labelPitchAmp">Višina-faktor ojačitve: 1</label>
-                        <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="pitchValueAmp" oninput="$('#labelPitchAmp')[0].innerHTML='Višina-faktor ojačitve: '.concat(this.value)">
-
-                        <br>
-                        <br>
-                        <h6>Predobdelava besedila</h6>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="cb-normalize" checked="">
-                            <label class="form-check-label" for="cb-normalize">Normaliziraj</label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="cb-accentuate" checked="">
-                            <label class="form-check-label" for="cb-accentuate">Naglasi</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="simple-accentuation" checked="">
-                            <label class="form-check-label" for="simple-accentuation">
-                                Uporabi enostavno naglaševanje
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="caching" checked="">
-                            <label class="form-check-label" for="caching">
-                                Uporabi že sintetizirano besedilo
-                            </label>
-                        </div>
-                        <hr>
-
-                        <br>
-                        <br>
-
-                        <h6>Stanje sistema <a href="javascript:checkServices()"><i class="bi bi-arrow-clockwise"></i></a></h6>
-                        <br>
-                        <p id="label_deviceCount">Število GPU enot: -</p>
-                        <p id="label_totalMEM">Skupna velikost spomina: -</p>
-                        <p id="label_consumedMEM">Zasedeno: -</p>
-                        <p id="label_freeMEM">Prosto: -</p>
-                        <br>
-
-                        <p>Dostopnost naglaševalnika: <i class="bi bi-question-circle-fill" style="color:black" id="id_accentuator_icon"></i> </p>
-                        <p>Dostopnost normalizatorja: <i class="bi bi-question-circle-fill" style="color:black" id="id_normalizator_icon"></i> </p>
-
-                        <!---Check system state-->
-                        <script>
-                            <!--checkServices()-->
-                        </script>
-                    </div>
-                </div>
+                <button class="btn btn-dark" id="btn-settings" type="button" data-toggle="modal" data-target="#offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
             </div>
         </div>
         <div class="col-sm-2"></div>
