@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Knjiga = mongoose.model("Knjiga");
 const mammoth = require('mammoth');
+const {response} = require("express");
+//const fetch = require('node-fetch');
 
 const izbrisiKnjigo =  async (req, res) => {
     const izbris = await Knjiga.deleteOne({_id: req.params.knjigaId});
@@ -160,46 +162,62 @@ const ustvariKnjigo = async (req, res) => {
             versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
         }]*/},
         function (error, knjiga) {
-            if(!error){
-                Knjiga.find({},function (error, knjige) {
-                    if(!error){
-                        const url = "https://tts.true-bar.si/v1/speak";
-                        const headers = {
-                            "Content-Type": "application/json",
-                        };
+            if(!error) {
+                //Knjiga.find({},function (error, knjige) {
+                if (!error) {
+                    const url = "https://tts.true-bar.si/v1/speak";
+                    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzQyNTV9.RDvbGJYu9TgH-yNSPxyzqoSRQzUVG5AgbUBk0_YcyNk";
 
-                        const data = {
-                            "userid": "nina",
-                            "voice": "ajda",
-                            "input_text": "string",
-                            "normalize": false,
-                            "accentuate": true,
-                            "simple_accentuation": true,
-                            "use_cache": true,
-                            "pace": 1,
-                            "tokenize": true,
-                            "pause_for_spelling": 0.25
-                        };
+                    const headers = {
+                        "accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    };
 
-                        fetch(url, {
-                            method: "POST",
-                            headers: headers,
-                            body: JSON.stringify(data),
+                    const data = {
+                        "userid": "nina",
+                        "voice": "ajda",
+                        "input_text": "To hočem v audio.",
+                        "normalize": false,
+                        "accentuate": true,
+                        "simple_accentuation": true,
+                        "use_cache": true,
+                        "pace": 1,
+                        "tokenize": true,
+                        "pause_for_spelling": 0.25
+                    };
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: data,
+                    })
+                        .then(response => {
+                            console.log("Response status:", response.status);
+                            console.log("response headers: " + JSON.stringify(response.headers));
+                            return response.text();
                         })
-                            .then(response => response.json())
-                            .then(data => console.log(data))
-                            .catch(error => console.error('Error:', error));
+                        .then(body => {
+                            console.log("Response body:", body); // Log the response body
+                        })
+                        .then(data => {
+                            console.log("data: " + JSON.stringify(data));
+                            res.redirect("" + knjiga._id);
+                        })
+                        .catch(error => console.error('Error:', error));
 
-                        res.redirect("" + knjiga._id);
-                    }else{
+
+                    /*}else{
                         res.status(404).send("Ni najdeno");
                     }
-                });
-            }else{
-                console.log(error);
-                res.status(404).send("Not created");
+                });*/
+                } else {
+                    console.log("error" + error);
+                    res.status(404).send("Not created");
+                }
+
             }
-        });
+    });
 };
 
 module.exports = {

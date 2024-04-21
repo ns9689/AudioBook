@@ -23,8 +23,80 @@ document.addEventListener('DOMContentLoaded', function () {
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
     const updateVersionButtons = document.querySelectorAll('.update-version-btn');
+    const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
+    playSentenceButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const url = "https://tts.true-bar.si/v1/speak";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzkwNzd9.7ZpwoHoXKE4V5AQwg8iRqf_NbItuCT8OtMJhXMukiaA";
+
+            const headers = {
+                "accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            };
+
+            const data = {
+                "userid": "nina",
+                "voice": "ajda",
+                "input_text": "To hočem v audio.",
+                "normalize": false,
+                "accentuate": true,
+                "simple_accentuation": true,
+                "use_cache": true,
+                "pace": 1,
+                "tokenize": true,
+                "pause_for_spelling": 0.25
+            };
+
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    console.log("response: " + response);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("data: " + JSON.stringify(data));
+//                    res.redirect("" + knjiga._id);
+                })
+                .catch(error => console.error('Error:', error));
+        })
+    });
     deleteSentenceButtons.forEach(function (button) {
         button.addEventListener('click', function () {
+            const url = "https://tts.true-bar.si/v1/register_user";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzkwNzd9.7ZpwoHoXKE4V5AQwg8iRqf_NbItuCT8OtMJhXMukiaA";
+
+            const headers = {
+                "accept": "application/json",
+                "Content-Type": "application/json"
+            };
+
+            const data = {
+                "user_fullname": "ninas",
+                "user_email": "ns9689@student.uni-lj.si",
+                "username": "ninas",
+                "password": "ninas",
+                "password_repeat": "ninas"
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: data,
+            })
+                .then(response => {
+                    console.log("response: " + JSON.stringify(response));
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("data: " + JSON.stringify(data));
+                    //res.redirect("" + knjiga._id);
+                })
+                .catch(error => console.error('Error:', error));
+
+            //DELETE
             const stavekId = this.getAttribute('data-id');
             const knjigaId = this.getAttribute('data-knjigaId');
             if (confirm('Ali zares želite izbrisati ta stavek?')) {
