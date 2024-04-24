@@ -94,11 +94,8 @@
                         <tr class="search table-secondary {{this._id}}">
                             <th scope="row" style="background-color: {{this.state}}">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
-                            <!--<td>{{this.versions}}</td>
-                            <td>{{this._id}}</td>-->
-                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
+                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}"  data-knjigaId="{{../knjiga._id}}"data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
-                            <!--<td width="15%"><button class="btn play-sentence-btn"><i class="bi bi-pencil-square"></i></button></td>-->
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
                         </tr>
 
@@ -109,9 +106,8 @@
                                         <tbody>
                                         <tr>
                                             <td>
-                                                <audio controls>
-                                                    <!--<source src="horse.ogg" type="audio/ogg">
-                                                    <source src="horse.mp3" type="audio/mpeg">-->
+                                                <audio controls id="audioControlsPlay{{this._id}}">
+
                                                     Your browser does not support the audio element.
                                                 </audio>
                                             </td>

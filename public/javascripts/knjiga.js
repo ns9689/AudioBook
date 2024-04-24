@@ -19,6 +19,57 @@ function myFunction() {
     }
 }
 
+function predvajajZvok(button) {
+    const url = "https://tts.true-bar.si/v1/speak";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTQwMTI4ODF9.0mfF3JCIgqBSZPx7fE5fQnOPJmunmtmF7uXgGRr2w_w";
+
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+        "X-Content-Type-Options": "nosniff",
+    };
+
+    const data = {
+        input_text: "stavek",
+        userid: "nina",
+        voice: "ajda",
+        pace: "1",
+        accentuate: true,
+        simple_accentuation: true,
+        use_cache: true,
+        normalize: true
+    };
+
+    fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+            }
+            const contentType = response.headers.get("Content-Type");
+            if (contentType && contentType.startsWith("audio/")) {
+                return response.blob();
+            } else {
+                throw new Error("Unexpected content type: " + contentType);
+            }
+        })
+        .then(blob => {
+            const audioUrl = URL.createObjectURL(blob);
+            const stavekId = button.getAttribute("data-stavekId");
+            const audioControlsPlayId = "audioControlsPlay" + stavekId;
+            const audioElement = document.getElementById(audioControlsPlayId);
+            //boljse bi bilo, da bi to veljalo samo za enega! kako?
+            console.log(audioElement);
+            audioElement.src = audioUrl;
+            audioElement.load(); // Load the audio to start preloading it
+
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
@@ -26,101 +77,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
     playSentenceButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            const url = "https://tts.true-bar.si/v1/speak";
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM5OTM5NDh9.llGNM8Qhreo5DkJtvQLCFvP9g3jSTVN2_VNlhY2EsvI";
-
-            const headers = {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token,
-                "X-Content-Type-Options": 'nosniff'
-            };
-
-            const data = {
-                input_text: "to sintetiziraj",
-                userid: "nina",
-                voice: "ajda",
-                pace: "1",
-                accentuate: true,
-                simple_accentuation: true,
-                use_cache: true,
-                normalize: true
-            };
-
-            fetch(url, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("HTTP error, status = " + response.status);
-                    }
-                    console.log("tukaj1");
-                    // Check the content type of the response
-                    const contentType = response.headers.get("content-type");
-                    console.log("tukaj2");
-                    console.log(contentType);
-                    console.log(response.headers);
-                    const exposeHeaders = response.headers.get('Access-Control-Expose-Headers');
-                    console.log(exposeHeaders);
-                    if (contentType && contentType.startsWith("audio/")) {
-                        // Handle audio response
-                        const contentDispositionHeader = response.headers.get("Content-Disposition");
-                        console.log(contentDispositionHeader);
-                        return response.arrayBuffer(); // Assuming the audio data is in ArrayBuffer format
-                    } else {
-                        // Handle non-audio response
-                        throw new Error("Unexpected content type: " + contentType);
-                    }
-                    const contentDispositionHeader = response.headers.get("Content-Disposition");
-                    console.log(contentDispositionHeader);
-                    console.log("response: " + JSON.stringify(response));
-                    return response.arrayBuffer();
-                })
-                .then(response => {
-                    // get file name if you need the sessionid
-                    const contentDispositionHeader = response.headers.get("Content-Disposition");
-                    const filenameMatches = contentDispositionHeader.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-
-                    if (filenameMatches && filenameMatches[1]) {
-                        const filename = filenameMatches[1].replace(/['"]/g, "");
-                        console.log("Filename:", filename);
-                    }
-
-                    // create anchor to download the audio. To initiate download, just call the click() method like;
-                    // audioFile.click()
-                    audioFile = document.createElement("a");
-                    audioFile.setAttribute('id', 'audio-file')
-                    //audioFile.href = window.URL.createObjectURL(new Blob([request.response], {type: 'audio/ogg'}));
-                    audioFile.href = window.URL.createObjectURL(new Blob([request.response], {type: "audio/x-wav"}));
-                    audioFile.download = "audio.wav";
-
-                    // Handle the ArrayBuffer response data
-                console.log(arrayBuffer);
-                })
-                .catch(error => console.error('Error:', error));
+            /*const stavekId = button.getAttribute("data-stavekId");
+            const knjigaId = button.getAttribute("data-knjigaId");
+            fetch("/knjige/" + knjigaId + "/sentences/" + stavekId, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(res => {
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status} - ${res.statusText}`);
+                }
+                console.log("tukaj");
+                console.log(res);
+            }).catch(error => {
+                console.error('Error getting sentence:', error.message);
+            });
+            console.log(stavekId);
+            const stavek = document.querySelector(".stavekId");
+            console.log(stavek);*/
+            predvajajZvok(button);
         })
     });
     deleteSentenceButtons.forEach(function (button) {
         button.addEventListener('click', function () {
             const url = "https://tts.true-bar.si/v1/register_user";
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzkwNzd9.7ZpwoHoXKE4V5AQwg8iRqf_NbItuCT8OtMJhXMukiaA";
-
             const headers = {
                 "Content-Type": "application/json"
             };
-
             const data = {
-                "user_fullname": "ninas",
-                "user_email": "ns9689@student.uni-lj.si",
-                "username": "ninas",
-                "password": "ninas",
-                "password_repeat": "ninas"
+                user_fullname: "ninas",
+                user_email: "ns9689@student.uni-lj.si",
+                username: "ninas",
+                password: "ninas",
+                password_repeat: "ninas"
             };
             fetch(url, {
                 method: "POST",
                 headers: headers,
-                body: data,
+                body: JSON.stringify(data),
             })
                 .then(response => {
                     console.log("response: " + JSON.stringify(response));
@@ -143,14 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                 }).then(res => {
                     if (!res.ok) {
-                        console.log("tukaj");
-                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                        throw new Error(`Server error: ${res.status} - ${res.statusText}`);
                     }
                     window.location.href ="/knjige/" + knjigaId;
-                    //window.location.href ="/knjige/" + knjigaId;
                 }).catch(error => {
-                    console.log("tukaj2");
-                    // Handle errors during the DELETE request
                     console.error('Error deleting sentence:', error.message);
                 });
             }
@@ -169,12 +160,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                 }).then(res => {
                     if (!res.ok) {
-                        console.log("tukaj");
-                        throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                        throw new Error(`Server error: ${res.status} - ${res.statusText}`);
                     }
                     window.location.href = "/knjige/" + knjigaId;
                 }).catch(error => {
-                    // Handle errors during the DELETE request
                     console.error('Error deleting sentence:', error.message);
                 });
             }
@@ -204,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
             }).then(res => {
                 if (!res.ok) {
-                    throw new Error(`Server error: ${res.status} - ${response.statusText}`);
+                    throw new Error(`Server error: ${res.status} - ${res.statusText}`);
                 }
                 window.location.href = "/knjige/" + knjigaId;
                 /*const targetTd = document.getElementById("661c5b9b6108ad4cdfea3676");
