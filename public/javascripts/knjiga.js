@@ -27,39 +27,76 @@ document.addEventListener('DOMContentLoaded', function () {
     playSentenceButtons.forEach(function (button) {
         button.addEventListener("click", function () {
             const url = "https://tts.true-bar.si/v1/speak";
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzkwNzd9.7ZpwoHoXKE4V5AQwg8iRqf_NbItuCT8OtMJhXMukiaA";
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM5OTM5NDh9.llGNM8Qhreo5DkJtvQLCFvP9g3jSTVN2_VNlhY2EsvI";
 
             const headers = {
-                "accept": "application/json",
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
+                "Authorization": "Bearer " + token,
+                "X-Content-Type-Options": 'nosniff'
             };
 
             const data = {
-                "userid": "nina",
-                "voice": "ajda",
-                "input_text": "To hočem v audio.",
-                "normalize": false,
-                "accentuate": true,
-                "simple_accentuation": true,
-                "use_cache": true,
-                "pace": 1,
-                "tokenize": true,
-                "pause_for_spelling": 0.25
+                input_text: "to sintetiziraj",
+                userid: "nina",
+                voice: "ajda",
+                pace: "1",
+                accentuate: true,
+                simple_accentuation: true,
+                use_cache: true,
+                normalize: true
             };
 
             fetch(url, {
                 method: "POST",
                 headers: headers,
-                body: JSON.stringify(data),
+                body: JSON.stringify(data)
             })
                 .then(response => {
-                    console.log("response: " + response);
-                    return response.json();
+                    if (!response.ok) {
+                        throw new Error("HTTP error, status = " + response.status);
+                    }
+                    console.log("tukaj1");
+                    // Check the content type of the response
+                    const contentType = response.headers.get("content-type");
+                    console.log("tukaj2");
+                    console.log(contentType);
+                    console.log(response.headers);
+                    const exposeHeaders = response.headers.get('Access-Control-Expose-Headers');
+                    console.log(exposeHeaders);
+                    if (contentType && contentType.startsWith("audio/")) {
+                        // Handle audio response
+                        const contentDispositionHeader = response.headers.get("Content-Disposition");
+                        console.log(contentDispositionHeader);
+                        return response.arrayBuffer(); // Assuming the audio data is in ArrayBuffer format
+                    } else {
+                        // Handle non-audio response
+                        throw new Error("Unexpected content type: " + contentType);
+                    }
+                    const contentDispositionHeader = response.headers.get("Content-Disposition");
+                    console.log(contentDispositionHeader);
+                    console.log("response: " + JSON.stringify(response));
+                    return response.arrayBuffer();
                 })
-                .then(data => {
-                    console.log("data: " + JSON.stringify(data));
-//                    res.redirect("" + knjiga._id);
+                .then(response => {
+                    // get file name if you need the sessionid
+                    const contentDispositionHeader = response.headers.get("Content-Disposition");
+                    const filenameMatches = contentDispositionHeader.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+
+                    if (filenameMatches && filenameMatches[1]) {
+                        const filename = filenameMatches[1].replace(/['"]/g, "");
+                        console.log("Filename:", filename);
+                    }
+
+                    // create anchor to download the audio. To initiate download, just call the click() method like;
+                    // audioFile.click()
+                    audioFile = document.createElement("a");
+                    audioFile.setAttribute('id', 'audio-file')
+                    //audioFile.href = window.URL.createObjectURL(new Blob([request.response], {type: 'audio/ogg'}));
+                    audioFile.href = window.URL.createObjectURL(new Blob([request.response], {type: "audio/x-wav"}));
+                    audioFile.download = "audio.wav";
+
+                    // Handle the ArrayBuffer response data
+                console.log(arrayBuffer);
                 })
                 .catch(error => console.error('Error:', error));
         })
@@ -70,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTM3MzkwNzd9.7ZpwoHoXKE4V5AQwg8iRqf_NbItuCT8OtMJhXMukiaA";
 
             const headers = {
-                "accept": "application/json",
                 "Content-Type": "application/json"
             };
 
