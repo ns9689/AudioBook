@@ -78,7 +78,6 @@
 
         <label for="myInput"></label><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for the sentence...">
         <div class="col-sm-2"></div>
-
         <div class="col-sm-12">
             <table id="table" class="table table-hover" data-total-field="count">
                 <div id="debugArea"></div>
@@ -94,7 +93,8 @@
                         <tr class="search table-secondary {{this._id}}">
                             <th scope="row" style="background-color: {{this.state}}">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
-                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}"  data-knjigaId="{{../knjiga._id}}"data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>
+                            <!--<td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}" data-text="{{this.chosenText}}"  data-knjigaId="{{../knjiga._id}}" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>-->
+                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}" data-text="{{this.chosenText}}"  data-knjigaId="{{../knjiga._id}}"><i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
                         </tr>
@@ -105,17 +105,18 @@
                                     <table class="table">
                                         <tbody>
                                         <tr>
-                                            <td>
+                                            <!--<td>
                                                 <audio controls id="audioControlsPlay{{this._id}}">
 
                                                     Your browser does not support the audio element.
                                                 </audio>
-                                            </td>
+                                            </td>-->
                                             <td>
                                                 {{#each versions}}
                                                     <button class="btn btn{{@index}} btn-circle btn-sm {{this.state}}" data-toggle="modal" data-target="#b{{this._id}}">{{@index}}.</button>
                                                     <!-- modal -->
                                                     <div class="modal fade" id="b{{this._id}}" tabindex="-1">
+
                                                         <div class="modal-dialog" style="max-width: 80%;">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -129,7 +130,7 @@
                                                                         </div>
                                                                         <div class="col-sm-12">
                                                                             <label for="floatingInput">Nova verzija stavka</label>
-                                                                            <input type="text" class="form-control" id="floatingInput" name="text" value="{{this.text}}">
+                                                                            <input type="text" class="form-control" id="floatingInputNew{{this._id}}" name="text" value="{{this.text}}">
                                                                         </div>
                                                                         <div class="col-sm-12">
                                                                             <input type="submit" value="Shrani"
@@ -137,17 +138,9 @@
                                                                         </div>
                                                                     </form>
                                                                     <br>
-                                                                    <audio controls>
-                                                                        <!--<source src="horse.ogg" type="audio/ogg">
-                                                                        <source src="horse.mp3" type="audio/mpeg">-->
-                                                                        Your browser does not support the audio element.
-                                                                    </audio>
                                                                 </div>
                                                                 <div class="modal-footer player">
-                                                                    <!--<button class="btn edit" onclick="saveNewText()"><i class="bi bi-save"></i></button>-->
-                                                                    <button class="btn edit"><i class="bi bi-file-play"></i></button>
-                                                                    <!--<button class="btn edit"><i class="bi-bookmark-star"></i></button>
-                                                                    <button class="btn edit"><i class="bi-bookmark-x"></i></button>-->
+                                                                    <button class="btn edit play-sentence-btn" data-verzijaId="{{this._id}}"><i class="bi bi-file-play"></i></button>
                                                                     <button type="button" class="btn update-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="false"><i class="bi bi-bookmark-x"></i></button>
                                                                     <button type="button" class="btn update-version-btn {{this.state}}" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="true"><i class="bi bi-bookmark-star"></i></button>
                                                                     <button type="button" class="btn delete-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}"><i class="bi bi-trash"></i></button>
@@ -158,9 +151,9 @@
                                                     </div>
                                                 {{/each}}
 
-                                                <button class="btn btn-circle btn-sm" data-toggle="modal" data-target="#newVersion{{this._id}}"><b>+</b></button>
+                                                <button class="btn btn-circle btn-sm newVersionButton" data-toggle="modal" data-target="#newVersion{{this._id}}"><b>+</b></button>
                                                 <!-- modal-->
-                                                <div class="modal fade" id="newVersion{{this._id}}" tabindex="-1">
+                                                <div class="modal fade" id="newVersion{{this._id}}" tabindex="-1" style="z-index: 9999">
                                                     <div class="modal-dialog" style="max-width: 80%;">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -174,7 +167,7 @@
                                                                     </div>
                                                                     <div class="col-sm-12">
                                                                         <label for="floatingInput">Nova verzija</label>
-                                                                        <input type="text" class="form-control" id="floatingInput" name="text" value="{{this.chosenText}}">
+                                                                        <input type="text" class="form-control" id="floatingInputNew{{this._id}}" name="text" value="{{this.chosenText}}">
                                                                     </div>
                                                                     <div class="col-sm-12">
                                                                         <input type="submit" value="Shrani"
@@ -182,13 +175,10 @@
                                                                     </div>
                                                                 </form>
                                                                 <br>
-                                                                <audio controls>
-                                                                    <!--<source src="horse.ogg" type="audio/ogg">
-                                                                    <source src="horse.mp3" type="audio/mpeg">-->
-                                                                    Your browser does not support the audio element.
-                                                                </audio>
+                                                                <i>Audio je mogoče predvajati šele po shranitvi verzije in v modal ustrezne verzije.</i>
                                                             </div>
                                                             <div class="modal-footer">
+                                                                <!--<button class="btn edit play-sentence-btn" id="playButton" data-text=""><i class="bi bi-file-play"></i></button>-->
                                                                 <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                                             </div>
                                                         </div>
@@ -217,5 +207,8 @@
             </div>
         </div>
         <div class="col-sm-2"></div>
+    </div>
+    <div id="audioContainer">
+        <!--v knjiga.js-->
     </div>
 </div>

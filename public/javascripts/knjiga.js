@@ -19,9 +19,9 @@ function myFunction() {
     }
 }
 
-function predvajajZvok(button) {
+function predvajajZvok(button, text) {
     const url = "https://tts.true-bar.si/v1/speak";
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTQwMTI4ODF9.0mfF3JCIgqBSZPx7fE5fQnOPJmunmtmF7uXgGRr2w_w";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTUzOTA4Nzl9.BK5-uyvHlSXiNRl3TLglFhiWKyFp5L2jqkZ_b3g2_Vg";
 
     const headers = {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ function predvajajZvok(button) {
     };
 
     const data = {
-        input_text: "stavek",
+        input_text: text,
         userid: "nina",
         voice: "ajda",
         pace: "1",
@@ -59,15 +59,30 @@ function predvajajZvok(button) {
         .then(blob => {
             const audioUrl = URL.createObjectURL(blob);
             const stavekId = button.getAttribute("data-stavekId");
-            const audioControlsPlayId = "audioControlsPlay" + stavekId;
-            const audioElement = document.getElementById(audioControlsPlayId);
-            //boljse bi bilo, da bi to veljalo samo za enega! kako?
+            //const audioControlsPlayId = "audioControlsPlay" + stavekId;
+            //const audioControlsPlayId = "audioControlsPlay";
+            const audioElement = document.getElementById("audioContainer");
             console.log(audioElement);
-            audioElement.src = audioUrl;
-            audioElement.load(); // Load the audio to start preloading it
+            const div = document.createElement("div");
+            div.classList.add("audioElement");
+            div.innerHTML =`
+                <audio id="audioControlsPlay" controls="" className="mt-1">
+                    <source src="${audioUrl}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>`;
+            audioElement.appendChild(div);
+            //audioElement.src = audioUrl;
+            //audioElement.load(); // Load the audio to start preloading it
 
         })
         .catch(error => console.error('Error:', error));
+}
+
+function resetAudioElement() {
+    const audioElement = document.querySelector(".audioElement");
+    if (audioElement) {
+        audioElement.remove();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -75,28 +90,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
     const updateVersionButtons = document.querySelectorAll('.update-version-btn');
     const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
+    const newVersionButtons = document.querySelectorAll('.newVersionButton');
+    newVersionButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            resetAudioElement()
+        })
+    });
     playSentenceButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            /*const stavekId = button.getAttribute("data-stavekId");
-            const knjigaId = button.getAttribute("data-knjigaId");
-            fetch("/knjige/" + knjigaId + "/sentences/" + stavekId, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then(res => {
-                if (!res.ok) {
-                    throw new Error(`Server error: ${res.status} - ${res.statusText}`);
-                }
-                console.log("tukaj");
-                console.log(res);
-            }).catch(error => {
-                console.error('Error getting sentence:', error.message);
-            });
-            console.log(stavekId);
-            const stavek = document.querySelector(".stavekId");
-            console.log(stavek);*/
-            predvajajZvok(button);
+            resetAudioElement();
+            let text = button.getAttribute("data-text");
+            if (text == null) {
+                const verzijaId = this.getAttribute('data-verzijaId');
+                text = document.getElementById("floatingInputNew" + verzijaId).value;
+            }
+            console.log(text);
+            //console.log(text2);
+            predvajajZvok(button, text);
         })
     });
     deleteSentenceButtons.forEach(function (button) {

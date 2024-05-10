@@ -86,3 +86,15 @@ thead {
 .green {
     background-color: mediumseagreen; !important;
 }
+
+.audioElement {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    background-color: #888888;
+    padding: 10px;
+    border: solid 5px #0f0f0f;
+    border-radius: 10px;
+    z-index: 1500;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+}
