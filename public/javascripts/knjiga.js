@@ -1,3 +1,5 @@
+let tokenGlobal = "";
+
 function myFunction() {
     var input, filter, table, tr, td, i, txtValue, tr1;
     input = document.getElementById("myInput");
@@ -19,16 +21,45 @@ function myFunction() {
     }
 }
 
-function predvajajZvok(button, text) {
-    const url = "https://tts.true-bar.si/v1/speak";
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuaW5hIiwidXJvbGUiOiJub3JtYWwiLCJleHAiOjE3MTUzOTA4Nzl9.BK5-uyvHlSXiNRl3TLglFhiWKyFp5L2jqkZ_b3g2_Vg";
+async function pridobiToken () {
+    const url = "https://tts.true-bar.si/token";
+    const headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "accept": "application/json",
+    };
+    const data = "username=ninas&password=ninas";
+    fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: data
+    })
+        .then(response => {
+            let token = "";
+            if (!response.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+            }
+            response.json().then(data => ({
+                    data: data,
+                    status: response.status
+                })
+            ).then(res => {
+                //console.log("here" + res.status, res.data, res.data.access_token)
+                token = res.data.access_token;
+                //console.log("here: " + token);
+                tokenGlobal = token;
+                return token;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
 
+async function predvajajZvok(button, text) {
+    const url = "https://tts.true-bar.si/v1/speak";
     const headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + token,
+        "Authorization": "Bearer " + tokenGlobal,
         "X-Content-Type-Options": "nosniff",
     };
-
     const data = {
         input_text: text,
         userid: "nina",
@@ -47,6 +78,7 @@ function predvajajZvok(button, text) {
     })
         .then(response => {
             if (!response.ok) {
+                alert("Token ni veljaven! Ponovno naložite spletno stran");
                 throw new Error("HTTP error, status = " + response.status);
             }
             const contentType = response.headers.get("Content-Type");
@@ -58,24 +90,24 @@ function predvajajZvok(button, text) {
         })
         .then(blob => {
             const audioUrl = URL.createObjectURL(blob);
-            const stavekId = button.getAttribute("data-stavekId");
-            //const audioControlsPlayId = "audioControlsPlay" + stavekId;
-            //const audioControlsPlayId = "audioControlsPlay";
             const audioElement = document.getElementById("audioContainer");
-            console.log(audioElement);
+            if (!audioElement) {
+                console.error('audioContainer element not found');
+                return;
+            }
             const div = document.createElement("div");
             div.classList.add("audioElement");
-            div.innerHTML =`
-                <audio id="audioControlsPlay" controls="" className="mt-1">
+            div.innerHTML = `
+                <audio id="audioControlsPlay" controls="" >
                     <source src="${audioUrl}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>`;
             audioElement.appendChild(div);
-            //audioElement.src = audioUrl;
-            //audioElement.load(); // Load the audio to start preloading it
-
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
 }
 
 function resetAudioElement() {
@@ -86,27 +118,42 @@ function resetAudioElement() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    tokenGlobal = pridobiToken();
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
     const updateVersionButtons = document.querySelectorAll('.update-version-btn');
     const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
     const newVersionButtons = document.querySelectorAll('.newVersionButton');
+    /*const getTokenButtons = document.querySelectorAll('.getTokenButton');
+    getTokenButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            console.log("Button clicked");
+            tokenGlobal = pridobiToken();
+            console.log("Token retrieved:", tokenGlobal);
+        })
+    });*/
     newVersionButtons.forEach(function (button) {
         button.addEventListener("click", function () {
             resetAudioElement()
         })
     });
     playSentenceButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", async function () {
             resetAudioElement();
             let text = button.getAttribute("data-text");
             if (text == null) {
                 const verzijaId = this.getAttribute('data-verzijaId');
                 text = document.getElementById("floatingInputNew" + verzijaId).value;
             }
-            console.log(text);
-            //console.log(text2);
-            predvajajZvok(button, text);
+            //console.log(text);
+            predvajajZvok(button, text)
+                .then(response => {
+                    //console.log(response);
+                    if (!response.ok) {
+                        throw new Error("HTTP error, status = " + response.status);
+                    }
+                })
+                .catch(error => console.log(error));
         })
     });
     deleteSentenceButtons.forEach(function (button) {
