@@ -2,7 +2,6 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <!--<button type="button" class="btn btn-dark" data-id="{{this._id}}" id="btn-normalize">Uredi projekt</button>-->
             <button class="btn btn-dark" id="btn-settings" type="button" data-toggle="modal" data-target="#offcanvasLeft"><i class="bi bi-gear"></i> Nastavitve</button>
             <a href="/knjige"><button type="button" class="btn btn-primary" id="btn-normalize">Shrani projekt</button></a>
             <button type="button" class="btn btn-success" id="btn-prepare">Dokončaj projekt</button> <!-- še 1x potrdi plus možnost preklica-->
@@ -15,9 +14,19 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel"><b>Nastavitve</b></h5>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body modal-body-settings">
+                            <h6 class="settings-header" id="nastavitve"><b>Trenutne nastavitve</b></h6>
+                            <div>
+                                <div>Govorec:<b> {{knjiga.settings.[0].govorec}}</b></div>
+                                <div>Tempo:<b> {{knjiga.settings.[0].tempo}}</b></div>
+                                <div>Normaliziraj:<b> {{knjiga.settings.[0].normaliziraj}}</b></div>
+                                <div>Naglasi:<b> {{knjiga.settings.[0].naglasi}}</b></div>
+                                <div>Uporabi enostavno naglaševanje:<b> {{knjiga.settings.[0].enostavnoNaglasevanje}}</b></div>
+                                <div>Uporabi že sintetizirano besedilo:<b> {{knjiga.settings.[0].sintetiziranoBesedilo}}</b><br><br></div>
+                            </div>
                             <!--Voice selector-->
-                            <h6 class="settings-header" id="voice-setting"><a data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="true" href="#voice-settings" onclick="toggleCollapseButton(this)" class=""><i class="clsbtn fa-fw fa-chevron-up fa-solid" aria-hidden="true"></i></a> Nastavitve glasu</h6>
+                            <h6 class="settings-header" id="nastavitve"><b>Nove nastavitve</b></h6>
+                            <h6 class="settings-header" id="voice-setting">Nastavitve glasu</h6>
                             <div class="col-md multi-collapse collapse show" id="voice-settings-voice-selector" style="">
                                 <div class="form-floating">
                                     <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
@@ -29,19 +38,10 @@
                             <!--Prosody settings-->
                             <div class="multi-collapse collapse show" id="voice-settings-voice-prosody" style="">
                                 <label for="paceValue" class="form-label" id="labelPace">Tempo: 1</label>
-                                <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="paceValue" oninput="$('#labelPace')[0].innerHTML='Tempo: '.concat(this.value)">
-
-                                <label for="pitchValueShift" class="form-label" id="labelPitchShift">Višina-zamik: 0</label>
-                                <input type="range" class="form-range" min="-50" max="50" value="0" id="pitchValueShift" oninput="$('#labelPitchShift')[0].innerHTML='Višina-zamik: '.concat(this.value)">
-
-                                <label for="pitchValueAmp" class="form-label" id="labelPitchAmp">Višina-faktor ojačitve: 1</label>
-                                <input type="range" class="form-range" min="0" max="2" step="0.1" value="1" id="pitchValueAmp" oninput="$('#labelPitchAmp')[0].innerHTML='Višina-faktor ojačitve: '.concat(this.value)">
-                                <br>
-                                <br>
-                                <br>
+                                <input type="range" class="form-range" min="0.1" max="2" step="0.1" value="1" id="paceValue" oninput="$('#labelPace')[0].innerHTML='Tempo: '.concat(this.value)">
                             </div>
                             <!--Preprocessing options-->
-                            <h6 class="settings-header" id="text-preprocessing-setting"><a data-bs-toggle="collapse" href="#text-preprocessing" aria-expanded="true" onclick="toggleCollapseButton(this)" class=""><i class="clsbtn fa-fw fa-chevron-up fa-solid" aria-hidden="true"></i></a> Predobdelava besedila</h6>
+                            <h6 class="settings-header" id="text-preprocessing-setting">Predobdelava besedila</h6>
                             <div class="collapse show" id="text-preprocessing" style="">
                                 <br>
                                 <div class="form-check form-switch">
@@ -65,7 +65,7 @@
                                     </label>
                                 </div>
                                 <br>
-                                <button class="btn btn-primary"  data-dismiss="modal">Shrani</button>
+                                <button class="btn btn-primary update-settings-btn"  data-knjigaId="{{knjiga._id}}" data-dismiss="modal">Shrani</button>
                                 <div class="modal-footer player">
                                     <button class="btn edit close" data-dismiss="modal"><i class="bi bi-x"></i></button>
                                 </div>
@@ -94,7 +94,14 @@
                             <th scope="row" style="background-color: {{this.state}}">{{@index}}</th>
                             <td>{{this.chosenText}}</td>
                             <!--<td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}" data-text="{{this.chosenText}}"  data-knjigaId="{{../knjiga._id}}" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-play-circle"></i></button></td>-->
-                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}" data-text="{{this.chosenText}}"  data-knjigaId="{{../knjiga._id}}"><i class="bi bi-play-circle"></i></button></td>
+                            <td width="15%"><button type="button" class="btn play-sentence-btn" data-stavekId="{{this._id}}" data-text="{{this.chosenText}}"  data-knjigaId="{{../knjiga._id}}"
+                                                    data-govorec="{{../knjiga.settings.[0].govorec}}"
+                                                    data-tempo="{{../knjiga.settings.[0].tempo}}"
+                                                    data-normaliziraj="{{../knjiga.settings.[0].normaliziraj}}"
+                                                    data-naglasi="{{../knjiga.settings.[0].naglasi}}"
+                                                    data-enostavnoNaglasevanje="{{../knjiga.settings.[0].enostavnoNaglasevanje}}"
+                                                    data-sintetiziranoBesedilo="{{../knjiga.settings.[0].sintetiziranoBesedilo}}">
+                                <i class="bi bi-play-circle"></i></button></td>
                             <td width="15%"><button class="btn" data-toggle="collapse" data-target="#a{{this._id}}" aria-expanded="true" aria-controls="collapseOne"><i class="bi bi-pencil-square"></i></button></td>
                             <td width="15%"><button type="button" class="btn delete-sentence-btn" data-id="{{this._id}}" data-knjigaId="{{../knjiga._id}}"><i class="bi bi-trash"></i></button></td>
                         </tr>
@@ -140,7 +147,14 @@
                                                                     <br>
                                                                 </div>
                                                                 <div class="modal-footer player">
-                                                                    <button class="btn edit play-sentence-btn" data-verzijaId="{{this._id}}"><i class="bi bi-file-play"></i></button>
+                                                                    <button class="btn edit play-sentence-btn" data-verzijaId="{{this._id}}" data-knjigaId="{{../knjiga._id}}"
+                                                                            data-govorec="{{../../knjiga.settings.[0].govorec}}"
+                                                                            data-tempo="{{../../knjiga.settings.[0].tempo}}"
+                                                                            data-normaliziraj="{{../../knjiga.settings.[0].normaliziraj}}"
+                                                                            data-naglasi="{{../../knjiga.settings.[0].naglasi}}"
+                                                                            data-enostavnoNaglasevanje="{{../../knjiga.settings.[0].enostavnoNaglasevanje}}"
+                                                                            data-sintetiziranoBesedilo="{{../../knjiga.settings.[0].sintetiziranoBesedilo}}">
+                                                                        <i class="bi bi-file-play"></i></button>
                                                                     <button type="button" class="btn update-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="false"><i class="bi bi-bookmark-x"></i></button>
                                                                     <button type="button" class="btn update-version-btn {{this.state}}" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}" data-izbranaVerzija="true"><i class="bi bi-bookmark-star"></i></button>
                                                                     <button type="button" class="btn delete-version-btn" data-knjigaId="{{../../knjiga._id}}" data-stavekId="{{../this._id}}" data-verzijaId="{{this._id}}"><i class="bi bi-trash"></i></button>

@@ -1,5 +1,32 @@
 const mongoose = require("mongoose");
 
+const settingsShema = new mongoose.Schema({
+   govorec: {
+      type: String,
+      default: "ajda"
+   },
+   tempo: {
+      type: String,
+      default: 1
+   },
+   normaliziraj: {
+      type: Boolean,
+      default: true
+   },
+   naglasi: {
+      type: Boolean,
+      default: true
+   },
+   enostavnoNaglasevanje: {
+      type: Boolean,
+      default: true
+   },
+   sintetiziranoBesedilo: {
+      type: Boolean,
+      default: true
+   },
+});
+
 const versionsShema = new mongoose.Schema({
    text: {
       type: String,
@@ -48,7 +75,7 @@ const knjigaShema = new mongoose.Schema({
       type: String,
    },
    sentences: {
-      type: [sentencesShema], //ne bo string, ampak audio, tudi text? - nova tabela?
+      type: [sentencesShema],
    },
    dateCreated: {
       type: String,
@@ -65,7 +92,9 @@ const knjigaShema = new mongoose.Schema({
       data: Buffer, // For storing file data
       contentType: String,
    },
-
+   settings: {
+      type: [settingsShema],
+   },
 });
 
 mongoose.model("Knjiga", knjigaShema, "Knjiga");

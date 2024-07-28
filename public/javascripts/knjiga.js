@@ -53,7 +53,7 @@ async function pridobiToken () {
         .catch(error => console.error('Error:', error));
 }
 
-async function predvajajZvok(button, text) {
+async function predvajajZvok(button, text, govorec, tempo, naglasi, naglasevanje, sintetiziranje, normaliziraj) {
     const url = "https://tts.true-bar.si/v1/speak";
     const headers = {
         "Content-Type": "application/json",
@@ -63,12 +63,12 @@ async function predvajajZvok(button, text) {
     const data = {
         input_text: text,
         userid: "nina",
-        voice: "ajda",
-        pace: "1",
-        accentuate: true,
-        simple_accentuation: true,
-        use_cache: true,
-        normalize: true
+        voice: govorec,
+        pace: tempo,
+        accentuate: naglasi,
+        simple_accentuation: naglasevanje,
+        use_cache: sintetiziranje,
+        normalize: normaliziraj
     };
 
     fetch(url, {
@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
     const deleteVersionButtons = document.querySelectorAll('.delete-version-btn');
     const updateVersionButtons = document.querySelectorAll('.update-version-btn');
+    const updateSettingsButtons = document.querySelectorAll('.update-settings-btn');
     const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
     const newVersionButtons = document.querySelectorAll('.newVersionButton');
     /*const getTokenButtons = document.querySelectorAll('.getTokenButton');
@@ -145,8 +146,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 const verzijaId = this.getAttribute('data-verzijaId');
                 text = document.getElementById("floatingInputNew" + verzijaId).value;
             }
-            //console.log(text);
-            predvajajZvok(button, text)
+            let govorec = this.getAttribute('data-govorec');
+            if (govorec == null || govorec == "") {
+                console.log(govorec);
+                govorec = "ajda";
+            } else {
+                switch (parseInt(govorec)) {
+                    case 1:
+                        govorec = "ajda";
+                        break;
+                    case 2:
+                        govorec = "jure";
+                        break;
+                    case 3:
+                        govorec = "ziga";
+                        break;
+                }
+            }
+
+            let tempo = this.getAttribute('data-tempo');
+            tempo = (tempo) ? tempo : "1";
+            let normaliziraj = this.getAttribute('data-normaliziraj');
+            if (normaliziraj == "") normaliziraj = true;
+            let naglasi = this.getAttribute('data-naglasi');
+            if (naglasi == "") naglasi = true;
+            let naglasevanje = this.getAttribute('data-enostavnoNaglasevanje');
+            if (naglasevanje == "") naglasevanje = true;
+            let sintetiziranje = this.getAttribute('data-sintetiziranoBesedilo');
+            if (sintetiziranje == "") sintetiziranje = true;
+            console.log(govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje);
+            predvajajZvok(button, text, govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje)
                 .then(response => {
                     //console.log(response);
                     if (!response.ok) {
@@ -155,6 +184,68 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(error => console.log(error));
         })
+    });
+    updateSettingsButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const knjigaId = this.getAttribute('data-knjigaId');
+            console.log(knjigaId + " knjiga");
+            let govorec = document.getElementById('floatingSelectGrid').value;
+            if (govorec != null) {
+                //console.log(govorec);
+                switch (parseInt(govorec)) {
+                    case 1:
+                        govorec = "ajda";
+                        break;
+                    case 2:
+                        govorec = "jure";
+                        break;
+                    case 3:
+                        govorec = "ziga";
+                        break;
+                }
+            }
+            else govorec = "ajda";
+            let tempo = document.getElementById('paceValue').value;
+            tempo = (tempo) ? tempo : "1";
+            let normaliziraj = document.getElementById('cb-normalize').checked;
+            if (normaliziraj == null) normaliziraj = true;
+            let naglasi = document.getElementById('cb-accentuate').checked;
+            if (naglasi == null) naglasi = true;
+            let naglasevanje = document.getElementById('simple-accentuation').checked;
+            if (naglasevanje == null) naglasevanje = true;
+            let sintetiziranje = document.getElementById('caching').checked;
+            if (sintetiziranje == null) sintetiziranje = true;
+            //console.log(govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje);
+            const postData = {
+                govorec: govorec,
+                tempo: tempo,
+                normaliziraj: normaliziraj,
+                naglasi: naglasi,
+                enostavnoNaglasevanje: naglasevanje,
+                sintetiziranoBesedilo: sintetiziranje
+            };
+            let jsonStr = "";
+            try {
+                jsonStr = JSON.stringify(postData);
+            } catch (error) {
+                console.error("Error while stringifying JSON:", error);
+            }
+            console.log(jsonStr);
+            fetch("/knjige/" + knjigaId + "/settings/", {
+                method: 'POST',
+                body: jsonStr,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(res => {
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status} - ${res.statusText}`);
+                }
+                window.location.href = "/knjige/" + knjigaId;
+            }).catch(error => {
+                console.error('Error updating settings:', error.message);
+            });
+        });
     });
     deleteSentenceButtons.forEach(function (button) {
         button.addEventListener('click', function () {

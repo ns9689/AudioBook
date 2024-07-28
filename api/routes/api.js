@@ -19,6 +19,7 @@ router.get("/knjige/", ctrlKnjiga.vseKnjige);
 router.delete("/knjige/izbrisiKnjige", ctrlKnjiga.izbrisiVseKnjige);
 router.get("/knjige/:knjigaId", ctrlKnjiga.pridobiKnjigo);
 router.put("/knjige/:knjigaId/uredi", ctrlKnjiga.posodobiKnjigo);
+router.post("/knjige/:knjigaId/settings", ctrlKnjiga.posodobiNastavitve);
 router.delete("/knjige/:knjigaId", ctrlKnjiga.izbrisiKnjigo);
 
 /**

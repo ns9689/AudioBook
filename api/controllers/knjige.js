@@ -29,6 +29,29 @@ const posodobiKnjigo = (req,res) => {
     res.status(200).json({status:"Ok"});
 };
 
+const posodobiNastavitve = async (req, res) => {
+    let noveNastavitve = req.body;
+    console.log(noveNastavitve);
+    const knjigaId = req.params.knjigaId;
+    const knjiga = await Knjiga.findById(knjigaId);
+    if (knjiga) {
+        Knjiga.updateOne({_id: knjigaId}, {$set: {settings: [noveNastavitve]}})
+            .then(result => {
+                console.log(`Updated document with ID ${knjigaId}`);
+            })
+            .catch(err => {
+                console.error('Error updating document: ', err);
+            });
+        await knjiga.save();
+        res.redirect("/knjige/" + knjigaId);
+    }
+    else {
+        res.status(404).json({
+            message: "Knjiga with id '" + req.params.knjigaId + "' does not exist"
+        });
+    }
+};
+
 const pridobiKnjigo =  (req, res) => {
     Knjiga.findById(req.params.knjigaId,function (err, knjiga) {
         if (knjiga) {
@@ -228,4 +251,5 @@ module.exports = {
     izbrisiKnjigo,
     izbrisiVseKnjige,
     pridobiKnjigo,
+    posodobiNastavitve
 };
