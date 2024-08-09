@@ -125,14 +125,59 @@ document.addEventListener('DOMContentLoaded', function () {
     const updateSettingsButtons = document.querySelectorAll('.update-settings-btn');
     const playSentenceButtons = document.querySelectorAll('.play-sentence-btn');
     const newVersionButtons = document.querySelectorAll('.newVersionButton');
-    /*const getTokenButtons = document.querySelectorAll('.getTokenButton');
-    getTokenButtons.forEach(function (button) {
+    const generateBookButtons = document.querySelectorAll('.generateBookButton');
+
+    generateBookButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            console.log("Button clicked");
-            tokenGlobal = pridobiToken();
-            console.log("Token retrieved:", tokenGlobal);
+            const url = "https://tts.true-bar.si/v1/generate_audio";
+            const headers = {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + tokenGlobal,
+                "X-Content-Type-Options": "nosniff",
+            };
+            const data = {
+                "projectMetadata": {
+                    "project_name": "string",
+                    "project_description": "string",
+                    "project_default_pause_period": 0,
+                    "project_default_pause_comma": 0,
+                    "project_default_pace": 0,
+                    "project_default_voice": "ajda"
+                },
+                "segments": [
+                    {
+                        "rowId": 0,
+                        "rowStatus": "string",
+                        "rowText": "string",
+                        "pauseAfterPeriod": 0,
+                        "pauseAfterComma": 0,
+                        "pace": 0,
+                        "voice": "ajda"
+                    }
+                ]
+            };
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    let token = "";
+                    if (!response.ok) {
+                        alert("Token ni veljaven! Ponovno naložite spletno stran");
+                        throw new Error("HTTP error, status = " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const sessionid = data.sessionid;
+                    console.log('Success:', sessionid);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+            });
         })
-    });*/
+    });
     newVersionButtons.forEach(function (button) {
         button.addEventListener("click", function () {
             resetAudioElement()
