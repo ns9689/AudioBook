@@ -107,7 +107,6 @@ async function predvajajZvok(button, text, govorec, tempo, naglasi, naglasevanje
         .catch(error => {
             console.error('Error:', error);
         });
-
 }
 
 function resetAudioElement() {
@@ -115,6 +114,75 @@ function resetAudioElement() {
     if (audioElement) {
         audioElement.remove();
     }
+}
+
+function generateAudioBook(sessionId) {
+    const url = "https://tts.true-bar.si/v1/get_audio/" + sessionId;
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + tokenGlobal,
+        "X-Content-Type-Options": "nosniff",
+    };
+
+    fetch(url, {
+        method: "GET",
+        headers: headers
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            console.log("Blob url:," + blobUrl);
+
+            //download file
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = "audioBook.mp3";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            //audio player
+            const audioElement = document.getElementById("audioContainer");
+            if (!audioElement) {
+                console.error('audioContainer element not found');
+                return;
+            }
+            const div = document.createElement("div");
+            div.classList.add("audioElement");
+            div.innerHTML = `
+                <audio id="audioControlsPlay" controls="" >
+                    <source src="${blobUrl}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>`;
+            audioElement.appendChild(div);
+        })
+        .catch(error => {
+            console.error('Error fetching the audio file:', error);
+        });
+        /*.then(blob => {
+            const audioUrl = URL.createObjectURL(blob);
+            const audioElement = document.getElementById("audioContainer");
+            if (!audioElement) {
+                console.error('audioContainer element not found');
+                return;
+            }
+            const div = document.createElement("div");
+            div.classList.add("audioElement");
+            div.innerHTML = `
+                <audio id="audioControlsPlay" controls="" >
+                    <source src="${audioUrl}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>`;
+            audioElement.appendChild(div);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });*/
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -172,6 +240,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     const sessionid = data.sessionid;
                     console.log('Success:', sessionid);
+                    return sessionid;
+                })
+                .then(sessionId => {
+                    generateAudioBook(sessionId);
                 })
                 .catch(error => {
                     console.error("Error:", error);
