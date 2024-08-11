@@ -292,14 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let sintetiziranje = this.getAttribute('data-sintetiziranoBesedilo');
             if (sintetiziranje == "") sintetiziranje = true;
             console.log(govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje);
-            predvajajZvok(button, text, govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje)
-                .then(response => {
-                    //console.log(response);
-                    if (!response.ok) {
-                        throw new Error("HTTP error, status = " + response.status);
-                    }
-                })
-                .catch(error => console.log(error));
+            await predvajajZvok(button, text, govorec, tempo, normaliziraj, naglasi, naglasevanje, sintetiziranje);
         })
     });
     updateSettingsButtons.forEach(function (button) {
