@@ -137,7 +137,11 @@ async function checkSessionStatus(sessionId) {
                 const data = await response.json();
                 sessionStatus = data.status;
                 console.log("Session Status:", sessionStatus);
-
+                if (sessionStatus === "FAILED") {
+                    console.log("Session FAILED!");
+                    alert("Session FAILED!");
+                    break;
+                }
                 if (sessionStatus !== "FINISHED") {
                     console.log("Session not finished yet. Waiting...");
                     await delay(2000);  // Wait for 2 seconds before the next check
@@ -212,25 +216,6 @@ async function generateAudioBook(sessionId) {
     }
 }
 
-async function getSegments(knjigaId) {
-    const Knjiga = mongoose.model("Knjiga");
-    const knjiga = await Knjiga.findById(knjigaId).exec();
-    if (!knjiga) {
-        throw new Error("Knjiga not found");
-    }
-    const segments = knjiga.sentences.map((sentence, index) => ({
-        rowId: index,
-        rowStatus: "confirmed",
-        rowText: sentence.chosenText,
-        pauseAfterPeriod: 0.5,  // Default value, adjust as necessary
-        pauseAfterComma: 0.1,   // Default value, adjust as necessary
-        pace: 1,              // Default value, adjust as necessary
-        voice: knjiga.settings[0]?.govorec || "ajda", // Assuming the first setting defines the voice
-    }));
-console.log(segments);
-    return segments;
-}
-
 document.addEventListener('DOMContentLoaded', function () {
     tokenGlobal = pridobiToken();
     const deleteSentenceButtons = document.querySelectorAll('.delete-sentence-btn');
@@ -242,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const generateBookButtons = document.querySelectorAll('.generateBookButton');
 
     generateBookButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
+        button.addEventListener("click", async function () {
             const url = "https://tts.true-bar.si/v1/generate_audio";
             const headers = {
                 "Content-Type": "application/json",
@@ -250,67 +235,75 @@ document.addEventListener('DOMContentLoaded', function () {
                 "X-Content-Type-Options": "nosniff",
             };
             const knjigaId = this.getAttribute('data-knjigaId');
-            console.log(knjigaId + " knjiga");
-            let segments = getSegments(knjigaId);
-            const data = {
-                projectMetadata: {
-                    project_name: "string",
-                    project_description: "string",
-                    project_default_pause_period: 0.5,
-                    project_default_pause_comma: 0.1,
-                    project_default_pace: 1,
-                    project_default_voice: "ajda"
+            fetch("/knjige/" + knjigaId + "/sentences", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                segments: [
-                    {
-                        rowId: 0,
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+                }
+                console.log(response);
+                return response.json();
+            }).then(segments => {
+                console.log(segments);
+                console.log(segments.segments);
+                const data = {
+                    projectMetadata: {
+                        project_name: "string",
+                        project_description: "string",
+                        project_default_pause_period: 0.5,
+                        project_default_pause_comma: 0.1,
+                        project_default_pace: 1,
+                        project_default_voice: "ajda"
+                    },
+                    segments: segments.segments
+                    /*segments: [
+                        {rowId: 0,
                         rowStatus: "confirmed",
-                        rowText: "string",
+                        rowText: "sentence",
                         pauseAfterPeriod: 0.5,
                         pauseAfterComma: 0.1,
                         pace: 1,
-                        voice: "ajda"},
-                    {
-                        rowId: 1,
-                        rowStatus: "confirmed",
-                        rowText: "string",
-                        pauseAfterPeriod: 0.5,
-                        pauseAfterComma: 0.1,
-                        pace: 1,
-                        voice: "ajda"
-                    }
-                ]
-            };
-            let jsonStr = "";
-            try {
-                jsonStr = JSON.stringify(data);
-            } catch (error) {
-                console.error("Error while stringifying JSON:", error);
-            }
-            console.log(jsonStr);
-            fetch(url, {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    let token = "";
-                    if (!response.ok) {
-                        alert("Token ni veljaven! Ponovno naložite spletno stran");
-                        throw new Error("HTTP error, status = " + response.status);
-                    }
-                    return response.json();
+                        voice: "ajda",
+                    },
+                        {rowId: 1,
+                            rowStatus: "confirmed",
+                            rowText: "sentence",
+                            pauseAfterPeriod: 0.5,
+                            pauseAfterComma: 0.1,
+                            pace: 1,
+                            voice: "ajda",
+                        }]*/
+                };
+                fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(data)
                 })
-                .then(data => {
-                    const sessionid = data.sessionid;
-                    console.log('Success:', sessionid);
-                    return sessionid;
-                })
-                .then(sessionId => {
-                    generateAudioBook(sessionId);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+                    .then(response => {
+                        let token = "";
+                        if (!response.ok) {
+                            alert("Token ni veljaven! Ponovno naložite spletno stran");
+                            throw new Error("HTTP error, status = " + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const sessionid = data.sessionid;
+                        console.log('Success:', sessionid);
+                        return sessionid;
+                    })
+                    .then(sessionId => {
+                        generateAudioBook(sessionId);
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+
+            }).catch(error => {
+                console.error('Error updating sentence:', error.message);
             });
         })
     });
@@ -344,7 +337,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                 }
             }
-
             let tempo = this.getAttribute('data-tempo');
             tempo = (tempo) ? tempo : "1";
             let normaliziraj = this.getAttribute('data-normaliziraj');
@@ -518,14 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error(`Server error: ${res.status} - ${res.statusText}`);
                 }
                 window.location.href = "/knjige/" + knjigaId;
-                /*const targetTd = document.getElementById("661c5b9b6108ad4cdfea3676");
-                if (targetTd) {
-                    targetTd.scrollIntoView({
-                        behavior: "smooth",
-                        block: "nearest"
-                    });
-                }*/
-                //window.location.href = "/knjige/" + knjigaId;
             }).catch(error => {
                 console.error('Error updating sentence:', error.message);
             });

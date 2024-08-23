@@ -141,49 +141,7 @@ const ustvariKnjigo = async (req, res) => {
             state: "table-secondary",
             file: file,
             sentences: mappedSentences,
-            /*[{
-            originalText: "Rada",
-            chosenText: "Rada",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: "te",
-            chosenText: "te",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: "imam",
-            chosenText: "imam",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: "<3",
-            chosenText: "<3",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: " ",
-            chosenText: " ",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: "Tvoja",
-            chosenText: "Tvoja",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }, {
-            originalText: "lumpa",
-            chosenText: "lumpa",
-            chosenAudio: null,
-            state: "table-secondary",
-            versions: [{text: "text11", state: "table-secondary"}, {text: "text12", state: "table-secondary"}]
-        }]*/},
+            },
         function (error, knjiga) {
             if(!error) {
                 //Knjiga.find({},function (error, knjige) {
@@ -243,6 +201,7 @@ const ustvariKnjigo = async (req, res) => {
     });
 };
 
+
 module.exports = {
     novaKnjiga,
     vseKnjige,
@@ -251,5 +210,5 @@ module.exports = {
     izbrisiKnjigo,
     izbrisiVseKnjige,
     pridobiKnjigo,
-    posodobiNastavitve
+    posodobiNastavitve,
 };

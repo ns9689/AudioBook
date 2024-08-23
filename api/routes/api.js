@@ -26,7 +26,7 @@ router.delete("/knjige/:knjigaId", ctrlKnjiga.izbrisiKnjigo);
  * Stavki
  */
 router.post("/knjige/:knjigaId/sentences", ctrlStavek.novStavek);
-//router.get("/knjige/:knjigaId/sentences", ctrlStavek.vsiStavki);
+router.get("/knjige/:knjigaId/sentences", ctrlStavek.vsiStavki);
 router.get("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.pridobiStavek);
 router.put("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.posodobiStavek);
 router.delete("/knjige/:knjigaId/sentences/:sentenceId", ctrlStavek.izbrisiStavek);
