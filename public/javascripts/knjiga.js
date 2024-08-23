@@ -115,74 +115,120 @@ function resetAudioElement() {
         audioElement.remove();
     }
 }
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-function generateAudioBook(sessionId) {
-    const url = "https://tts.true-bar.si/v1/get_audio/" + sessionId;
+async function checkSessionStatus(sessionId) {
+    const url = "https://tts.true-bar.si/v1/session_status/" + sessionId;
     const headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + tokenGlobal,
         "X-Content-Type-Options": "nosniff",
     };
 
-    fetch(url, {
-        method: "GET",
-        headers: headers
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("HTTP error, status = " + response.status);
+    let sessionStatus = "";
+
+    // Keep checking until status is "FINISHED"
+    while (sessionStatus !== "FINISHED") {
+        try {
+            const response = await fetch(url, { method: "GET", headers: headers });
+            if (response.ok) {
+                const data = await response.json();
+                sessionStatus = data.status;
+                console.log("Session Status:", sessionStatus);
+
+                if (sessionStatus !== "FINISHED") {
+                    console.log("Session not finished yet. Waiting...");
+                    await delay(2000);  // Wait for 2 seconds before the next check
+                } else {
+                    console.log("Session finished!");
+                }
+            } else {
+                console.log("Failed to fetch session status:", response.statusText);
+                break;
             }
-            return response.blob();
+        } catch (error) {
+            console.error("Error fetching session status:", error);
+            break;
+        }
+    }
+}
+
+async function generateAudioBook(sessionId) {
+    const url = "https://tts.true-bar.si/v1/get_audio/" + sessionId;
+    const headers = {
+        //"Content-Type": "application/json",
+        "Authorization": "Bearer " + tokenGlobal,
+        "X-Content-Type-Options": "nosniff",
+    };
+    try {
+        // Introduce a delay before the fetch request
+        await delay(1000);
+        await checkSessionStatus(sessionId);
+
+        fetch(url, {
+            method: "GET",
+            headers: headers
         })
-        .then(blob => {
-            const blobUrl = URL.createObjectURL(blob);
-            console.log("Blob url:," + blobUrl);
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error, status = " + response.status);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const blobUrl = URL.createObjectURL(blob);
+                console.log("Blob url: " + blobUrl);
 
-            //download file
-            const link = document.createElement("a");
-            link.href = blobUrl;
-            link.download = "audioBook.mp3";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+                //download file
+                const link = document.createElement("a");
+                link.href = blobUrl;
+                link.download = "audioBook.mp3";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-            //audio player
-            const audioElement = document.getElementById("audioContainer");
-            if (!audioElement) {
-                console.error('audioContainer element not found');
-                return;
-            }
-            const div = document.createElement("div");
-            div.classList.add("audioElement");
-            div.innerHTML = `
+                //audio player
+                const audioElement = document.getElementById("audioContainer");
+                if (!audioElement) {
+                    console.error('audioContainer element not found');
+                    return;
+                }
+                const div = document.createElement("div");
+                div.classList.add("audioElement");
+                div.innerHTML = `
                 <audio id="audioControlsPlay" controls="" >
                     <source src="${blobUrl}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>`;
-            audioElement.appendChild(div);
-        })
-        .catch(error => {
-            console.error('Error fetching the audio file:', error);
-        });
-        /*.then(blob => {
-            const audioUrl = URL.createObjectURL(blob);
-            const audioElement = document.getElementById("audioContainer");
-            if (!audioElement) {
-                console.error('audioContainer element not found');
-                return;
-            }
-            const div = document.createElement("div");
-            div.classList.add("audioElement");
-            div.innerHTML = `
-                <audio id="audioControlsPlay" controls="" >
-                    <source src="${audioUrl}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>`;
-            audioElement.appendChild(div);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });*/
+                audioElement.appendChild(div);
+            })
+            .catch(error => {
+                console.error('Error fetching the audio file:', error);
+            });
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
+
+async function getSegments(knjigaId) {
+    const Knjiga = mongoose.model("Knjiga");
+    const knjiga = await Knjiga.findById(knjigaId).exec();
+    if (!knjiga) {
+        throw new Error("Knjiga not found");
+    }
+    const segments = knjiga.sentences.map((sentence, index) => ({
+        rowId: index,
+        rowStatus: "confirmed",
+        rowText: sentence.chosenText,
+        pauseAfterPeriod: 0.5,  // Default value, adjust as necessary
+        pauseAfterComma: 0.1,   // Default value, adjust as necessary
+        pace: 1,              // Default value, adjust as necessary
+        voice: knjiga.settings[0]?.govorec || "ajda", // Assuming the first setting defines the voice
+    }));
+console.log(segments);
+    return segments;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -203,27 +249,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 "Authorization": "Bearer " + tokenGlobal,
                 "X-Content-Type-Options": "nosniff",
             };
+            const knjigaId = this.getAttribute('data-knjigaId');
+            console.log(knjigaId + " knjiga");
+            let segments = getSegments(knjigaId);
             const data = {
-                "projectMetadata": {
-                    "project_name": "string",
-                    "project_description": "string",
-                    "project_default_pause_period": 0,
-                    "project_default_pause_comma": 0,
-                    "project_default_pace": 0,
-                    "project_default_voice": "ajda"
+                projectMetadata: {
+                    project_name: "string",
+                    project_description: "string",
+                    project_default_pause_period: 0.5,
+                    project_default_pause_comma: 0.1,
+                    project_default_pace: 1,
+                    project_default_voice: "ajda"
                 },
-                "segments": [
+                segments: [
                     {
-                        "rowId": 0,
-                        "rowStatus": "string",
-                        "rowText": "string",
-                        "pauseAfterPeriod": 0,
-                        "pauseAfterComma": 0,
-                        "pace": 0,
-                        "voice": "ajda"
+                        rowId: 0,
+                        rowStatus: "confirmed",
+                        rowText: "string",
+                        pauseAfterPeriod: 0.5,
+                        pauseAfterComma: 0.1,
+                        pace: 1,
+                        voice: "ajda"},
+                    {
+                        rowId: 1,
+                        rowStatus: "confirmed",
+                        rowText: "string",
+                        pauseAfterPeriod: 0.5,
+                        pauseAfterComma: 0.1,
+                        pace: 1,
+                        voice: "ajda"
                     }
                 ]
             };
+            let jsonStr = "";
+            try {
+                jsonStr = JSON.stringify(data);
+            } catch (error) {
+                console.error("Error while stringifying JSON:", error);
+            }
+            console.log(jsonStr);
             fetch(url, {
                 method: "POST",
                 headers: headers,
