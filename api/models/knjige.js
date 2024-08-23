@@ -46,6 +46,7 @@ const sentencesShema = new mongoose.Schema({
    },
    chosenText: {
       type: String,
+      default: "",
    },
    chosenAudio: {
       type: Buffer,

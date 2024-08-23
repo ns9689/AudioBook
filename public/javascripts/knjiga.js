@@ -128,7 +128,7 @@ async function checkSessionStatus(sessionId) {
     };
 
     let sessionStatus = "";
-
+    let responseStatus = "FAILED";
     // Keep checking until status is "FINISHED"
     while (sessionStatus !== "FINISHED") {
         try {
@@ -139,13 +139,14 @@ async function checkSessionStatus(sessionId) {
                 console.log("Session Status:", sessionStatus);
                 if (sessionStatus === "FAILED") {
                     console.log("Session FAILED!");
-                    alert("Session FAILED!");
+                    alert("Session FAILED! Try deleting empty rows.");
                     break;
                 }
                 if (sessionStatus !== "FINISHED") {
                     console.log("Session not finished yet. Waiting...");
                     await delay(2000);  // Wait for 2 seconds before the next check
                 } else {
+                    responseStatus = "FINISHED";
                     console.log("Session finished!");
                 }
             } else {
@@ -157,6 +158,7 @@ async function checkSessionStatus(sessionId) {
             break;
         }
     }
+    return responseStatus;
 }
 
 async function generateAudioBook(sessionId) {
@@ -169,8 +171,9 @@ async function generateAudioBook(sessionId) {
     try {
         // Introduce a delay before the fetch request
         await delay(1000);
-        await checkSessionStatus(sessionId);
+        const responseStatus = await checkSessionStatus(sessionId);
 
+        if (responseStatus !== "FAILED") {
         fetch(url, {
             method: "GET",
             headers: headers
@@ -211,7 +214,7 @@ async function generateAudioBook(sessionId) {
             .catch(error => {
                 console.error('Error fetching the audio file:', error);
             });
-    } catch (error) {
+    }} catch (error) {
         console.error("Fetch error:", error);
     }
 }
@@ -285,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(response => {
                         let token = "";
                         if (!response.ok) {
-                            alert("Token ni veljaven! Ponovno naložite spletno stran");
+                            alert("Izbrišite vse prazne vrstice");
                             throw new Error("HTTP error, status = " + response.status);
                         }
                         return response.json();

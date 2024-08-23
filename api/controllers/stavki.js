@@ -62,7 +62,7 @@ const vsiStavki =  async (req, res) => {
                 rowText: sentence.chosenText || sentence.originalText || "",
                 pauseAfterPeriod: 0.1,
                 pauseAfterComma: 0.5,
-                pace: parseFloat(knjiga.settings[0].tempo),
+                pace: parseFloat(knjiga.settings[0]?.tempo || 1),
                 voice: knjiga.settings[0]?.govorec || "ajda", // Assuming the first setting defines the voice
             }));
             res.json({ segments });
