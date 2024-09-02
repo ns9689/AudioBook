@@ -27,7 +27,7 @@ async function pridobiToken () {
         "Content-Type": "application/x-www-form-urlencoded",
         "accept": "application/json",
     };
-    const data = "username=ninas&password=ninas";
+    const data = "username=nina24&password=nina24";
     fetch(url, {
         method: "POST",
         headers: headers,
