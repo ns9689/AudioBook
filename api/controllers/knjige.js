@@ -73,6 +73,7 @@ const pridobiKnjigo =  (req, res) => {
 const vseKnjige =  async (req, res) => {
     Knjiga.find({},function (error, knjige) {
         if(!error){
+            console.log(JSON.stringify(knjige));
             res.render("knjige", {
                 title: "Projekti",
                 p_js: "../javascripts/knjige.js",
@@ -125,6 +126,7 @@ const ustvariKnjigo = async (req, res) => {
         console.error("Unsupported file type");
     }
     textToUse = textToUse.split(/(?<=[.!?"”\]\n])\s+/);
+    textToUse = textToUse.filter(bloa => bloa.length > 0);
 
     const mappedSentences = textToUse.map(sentence => ({
         originalText: sentence,
